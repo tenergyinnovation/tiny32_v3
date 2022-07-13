@@ -17,6 +17,8 @@
  * Rev1.7       :     Fix bug for PZEM-003 and PZEM-016 were read data error  
  * Rev1.8       :     Add PZEM-003_begin, PZEM-016_begin and ec_modbusRTU_begin for initial set RS485 pin
  * Rev3.0       :     Major change hardware from tiny32_v2.0 to tiny32_v3.0
+ *                    Add WTR10_E(SHT20) temperature and humidity sensor (RS485)
+ * Rev3.1       :     Add XY-MD02(SHT20) temperature and humidity sensor (RS485)      
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@innovation.co.th
  * TEL          :     089-140-7205
@@ -30,7 +32,7 @@
 class tiny32_v3
 {
 private:
-#define version_c  "3.0"
+#define version_c  "3.1"
 
     /* data */
 
@@ -109,10 +111,20 @@ bool PZEM_003_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
 
 
 /* WTR10-E Modbus RTU Temperature and Humidity sensor module */
-bool WTR10_E_begin(uint8_t rx = RXD3, uint8_t tx = TXD3);
+bool WTR10_E_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
 bool WTR10_E(uint8_t id, float &temp, float &humi);
 float WTR10_E_tempeature(uint8_t id);
 float WTR10_E_humidity(uint8_t id);
+
+/* XY-MD02 Modbus RTU Temperature and Humidity sensor module */
+bool XY_MD02_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
+bool XY_MD02(uint8_t id, float &temp, float &humi);
+float XY_MD02_tempeature(uint8_t id);
+float XY_MD02_humidity(uint8_t id);
+int8_t XY_MD02_searchAddress(void);
+int8_t XY_MD02_SetAddress(uint8_t id, uint8_t new_id);
+
+
 
 };
 
