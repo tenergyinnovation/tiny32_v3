@@ -3,7 +3,7 @@
  * Description  :     Class for Hardware config and function for tiny32_v3 module
  * Author       :     Tenergy Innovation Co., Ltd.
  * Date         :     23 Nov 2021
- * Revision     :     3.0
+ * Revision     :     3.1
  * Rev1.0       :     Original 
  * Rev1.1       :     Add TimeStamp_minute  
  *                    Add TimeStamp_24hr_minute
@@ -123,8 +123,6 @@ float XY_MD02_tempeature(uint8_t id);
 float XY_MD02_humidity(uint8_t id);
 int8_t XY_MD02_searchAddress(void);
 int8_t XY_MD02_SetAddress(uint8_t id, uint8_t new_id);
-
-
 
 };
 
