@@ -5707,7 +5707,7 @@ float tiny32_v3::XY_MD02_humidity(uint8_t id)
 
 /***********************************************************************
  * FUNCTION:    XY_MD02_searchAddress
- * DESCRIPTION: Search Address from XY-MD02 Module
+ * DESCRIPTION: Search Address from XY-MD02 Module [1-247]
  * PARAMETERS:  nothing
  * RETURNED:    Address
  ***********************************************************************/
@@ -5726,7 +5726,7 @@ int8_t tiny32_v3::XY_MD02_searchAddress(void)
     uint8_t _byte_cnt = 0;
     uint8_t _data_check[8];
 
-    /* Find ID from 1 to 127*/
+    /* Find ID from 1 to 247*/
     for(_id=1; _id<=247; _id++)
     {
 
@@ -6788,6 +6788,667 @@ float tiny32_v3::PR3000_H_N01_humidity()
       #endif
 
       return _humi;
+    }  
+    else
+    {
+      Serial.printf("Error: crc16\r\n");
+       return -1;
+    }    
+}
+
+
+/***********************************************************************
+ * FUNCTION:    WATER_FLOW_METER_begin
+ * DESCRIPTION: set RX and TX pin
+ * PARAMETERS:  rx, tx
+ * RETURNED:    true/ false
+ ***********************************************************************/
+bool tiny32_v3::WATER_FLOW_METER_begin(uint8_t rx, uint8_t tx)
+{
+
+ if( ((tx== TXD2) || (tx== TXD3)) && ((rx== RXD2) || (rx== RXD3)) )
+  {
+    rs485.begin(9600, SERIAL_8N1, rx, tx);
+    return 1;
+  }
+  else
+  {
+    Serial.printf("Error: Fail to define RS485 port!!\r\n");
+    return 0;
+  }
+
+}
+
+
+
+/***********************************************************************
+ * FUNCTION:    WATER_FLOW_METER_searchAddress
+ * DESCRIPTION: Search Address from WATER_FLOW_METER Module [1-252]
+ * PARAMETERS:  nothing
+ * RETURNED:    Address
+ ***********************************************************************/
+int8_t tiny32_v3::WATER_FLOW_METER_searchAddress(void)
+{
+ uint8_t _id;
+
+    // #define modbusRTU_Debug
+
+    uint16_t _crc = 0xffff;
+    uint16_t _crc_r = 0xffff;
+    uint8_t _data_write[8];
+    uint8_t _data_read[20];
+    uint8_t _byte_cnt = 0;
+    uint8_t _data_check[8];
+
+    /* Find ID from 1 to 252*/
+    for(_id=1; _id<=252; _id++)
+    {
+
+        /*clear data*/
+        _crc = 0xffff;
+        _crc_r = 0xffff;
+        _byte_cnt = 0;
+        for(int i=0; i<sizeof(_data_check); i++)
+        {
+          _data_read[i]=0x00;
+          _data_check[i]=0x00;
+        }
+
+
+      _data_write[0] = _id;
+      _data_write[1] = 0x03;
+      _data_write[2] = 0x00;
+      _data_write[3] = 0x00;
+      _data_write[4] = 0x00;
+      _data_write[5] = 0x01;
+
+        // Generate CRC16
+        for(byte _i=0; _i < sizeof(_data_write)-2; _i++){
+            _crc = crc16_update(_crc, _data_write[_i]);
+        } 
+
+      // Insert CRC16 to data byte
+        #ifdef modbusRTU_Debug
+        Serial.printf("_crc = 0x%02X\r\n",_crc);
+        #endif
+        _data_write[sizeof(_data_write)-1] = _crc >> 8;          
+        _data_write[sizeof(_data_write)-2]= _crc - _data_write[sizeof(_data_write)-1]*0x0100 ;  
+
+
+
+    #pragma region 
+        /***** Debug monitor ****/
+        #ifdef modbusRTU_Debug
+        Serial.printf("Data write(%d): [ ",sizeof(_data_write));
+        for(byte _i=0; _i<sizeof(_data_write); _i++){
+          if( _data_write[_i] > 0x0F ){
+            Serial.printf("0x%X ",_data_write[_i]);
+          }
+          else{
+            Serial.printf("0x0%X ",_data_write[_i]);
+          } 
+        }
+        Serial.printf("]\r\n");
+        #endif
+    #pragma endregion
+
+
+        /**** Write data ****/ 
+        rs485.flush(); 
+        for(int _i=0; _i<8; _i++) rs485.write(_data_write[_i]);
+        
+        vTaskDelay(300);
+
+
+        /**** Read data ****/
+        if(rs485.available()){
+
+        for(byte _i=0; _i<sizeof(_data_read); _i++) _data_read[_i] = 0x00; //clear buffer
+        _byte_cnt = 0;
+
+        //correct data
+          do{
+              _data_read[_byte_cnt++] = rs485.read();
+              if(_data_read[0] == 0x00){ //แก้ไช bug เนื่องจากอ่านค่าแรกได้ 0x00
+                  _byte_cnt =0;
+              }
+          // }while(rs485.available()>0);
+          }while(rs485.available()>0 && _byte_cnt<sizeof(_data_read));
+          
+
+          /***** Debug monitor ****/
+          #ifdef modbusRTU_Debug
+          Serial.printf("Data read(%d): [ ",_byte_cnt);
+            for(byte _i=0; _i<_byte_cnt; _i++){
+                if( _data_read[_i] > 0x0F ){
+                  Serial.printf("0x%X ",_data_read[_i]);
+                }
+                else{
+                  Serial.printf("0x0%X ",_data_read[_i]);
+                } 
+            }
+            Serial.println("]");
+            #endif
+        } 
+
+      
+
+      /* Collect data to variable buffer */
+      if(_byte_cnt == 7){
+
+        for(int i=0; i<7; i++)
+        {
+          _data_check[i] = _data_read[i];
+        }
+     
+
+            /***** Debug monitor ****/
+            #ifdef modbusRTU_Debug
+            Serial.printf("Data check(%d): [ ",sizeof(_data_check));
+            for(byte _i=0; _i<sizeof(_data_check); _i++){
+                if( _data_check[_i] > 0x0F ){
+                  Serial.printf("0x%X ",_data_check[_i]);
+                }
+                else{
+                  Serial.printf("0x0%X ",_data_check[_i]);
+                } 
+            }
+            Serial.println("]");
+            #endif
+
+
+            /*** crc check for data read ***/ 
+          _crc = 0xffff;
+          _crc_r = 0xffff;
+          
+          // Generate CRC16
+          for(byte _i=0; _i < sizeof(_data_check)-2; _i++){
+              _crc = crc16_update(_crc, _data_check[_i]);
+          } 
+          #ifdef modbusRTU_Debug
+          Serial.printf("Debug: _crc = 0x%X\r\n",_crc);
+          #endif
+
+          // read crc byte from data_check
+          _crc_r = _data_check[sizeof(_data_check)-1]; //Serial.print(">>"); Serial.println(_crc_r,HEX);
+          _crc_r = _crc_r <<8; //Serial.print(">>"); Serial.println(_crc_r,HEX);
+          _crc_r = _crc_r + _data_check[sizeof(_data_check)-2]; //Serial.print(">>"); Serial.println(_crc_r,HEX);      
+          #ifdef modbusRTU_Debug 
+          Serial.printf("Debug: _crc_r = 0x%X\r\n",_crc_r);
+          #endif
+
+          //return ON/OFF status
+          if(_crc_r == _crc)
+          {
+
+
+            Serial.printf("\r\nInfo: the Address of this WATER-FLOW-METER => %d [Success]\r\n",_id);
+            return _id;
+
+
+          }  
+          else
+          {
+            // Serial.printf("Error: crc16\r\n");
+            return -1;
+          }
+      } 
+
+      else if(_byte_cnt > 7){
+
+      uint8_t _addcnt = _byte_cnt - 7; //ตัวแปรชดเชยการอ่านค่าผิดตำแหน่ง
+
+      //Collect data
+      for(int i=0; i<7; i++)
+      {
+        _data_check[i] = _data_read[i+_addcnt];
+      }
+
+            /***** Debug monitor ****/
+            #ifdef modbusRTU_Debug
+            Serial.printf("Data check(%d): [ ",sizeof(_data_check));
+            for(byte _i=0; _i<sizeof(_data_check); _i++){
+                if( _data_check[_i] > 0x0F ){
+                  Serial.printf("0x%X ",_data_check[_i]);
+                }
+                else{
+                  Serial.printf("0x0%X ",_data_check[_i]);
+                } 
+            }
+            Serial.println("]");
+            #endif
+
+
+            /*** crc check for data read ***/ 
+          _crc = 0xffff;
+          _crc_r = 0xffff;
+          
+          // Generate CRC16
+          for(byte _i=0; _i < sizeof(_data_check)-2; _i++){
+              _crc = crc16_update(_crc, _data_check[_i]);
+          } 
+          #ifdef modbusRTU_Debug
+          Serial.printf("Debug: _crc = 0x%X\r\n",_crc);
+          #endif
+
+          // read crc byte from data_check
+          _crc_r = _data_check[sizeof(_data_check)-1]; //Serial.print(">>"); Serial.println(_crc_r,HEX);
+          _crc_r = _crc_r <<8; //Serial.print(">>"); Serial.println(_crc_r,HEX);
+          _crc_r = _crc_r + _data_check[sizeof(_data_check)-2]; //Serial.print(">>"); Serial.println(_crc_r,HEX);      
+          #ifdef modbusRTU_Debug 
+          Serial.printf("Debug: _crc_r = 0x%X\r\n",_crc_r);
+          #endif
+
+          //return ON/OFF status
+          if(_crc_r == _crc)
+          {
+
+
+            Serial.printf("\r\nInfo: the Address of this WATER-FLOW-METER => %d [Success]\r\n",_id);
+            return _id;
+
+
+          }  
+          else
+          {
+            // Serial.printf("Error: crc16\r\n");
+            return -1;
+          }     
+
+
+      }
+      else
+      {
+        Serial.printf(".");
+
+      }
+
+    }
+
+    Serial.printf("\r\nInfo: Finish searching .... Can't find WATER-FLOW-METER for this bus [fail]");
+
+}
+
+/***********************************************************************
+ * FUNCTION:    WATER_FLOW_METER_setAddress
+ * DESCRIPTION: Set Address for WATER_FLOW_METER Module [1-252]
+ * PARAMETERS:  id, new_id
+ * RETURNED:    Address
+ ***********************************************************************/
+int8_t tiny32_v3::WATER_FLOW_METER_SetAddress(uint8_t id, uint8_t new_id)
+{
+    
+    /*check parameter*/
+    if((new_id < 1) || (new_id >= 252)) 
+    {
+      Serial.printf("Error: Address is out of the range[1-252]\r\n");
+      return -1;
+    }
+
+    // #define modbusRTU_Debug
+
+    uint16_t _crc = 0xffff;
+    uint16_t _crc_r = 0xffff;
+    uint8_t _data_write[8];
+    uint8_t _data_read[40];
+    uint8_t _byte_cnt = 0;
+    uint8_t _data_check[8];
+
+    _data_write[0] = id;
+    _data_write[1] = 0x06;
+    _data_write[2] = 0x00;
+    _data_write[3] = 0x00;
+    _data_write[4] = 0x00;
+    _data_write[5] = new_id;
+
+    // Generate CRC16
+    for(byte _i=0; _i < sizeof(_data_write)-2; _i++){
+        _crc = crc16_update(_crc, _data_write[_i]);
+    } 
+
+  // Insert CRC16 to data byte
+    #ifdef modbusRTU_Debug
+    Serial.printf("_crc = 0x%02X\r\n",_crc);
+    #endif
+    _data_write[sizeof(_data_write)-1] = _crc >> 8;          
+    _data_write[sizeof(_data_write)-2]= _crc - _data_write[sizeof(_data_write)-1]*0x0100 ;  
+
+
+#pragma region 
+    /***** Debug monitor ****/
+    #ifdef modbusRTU_Debug
+    Serial.printf("Data write(%d): [ ",sizeof(_data_write));
+    for(byte _i=0; _i<sizeof(_data_write); _i++){
+      if( _data_write[_i] > 0x0F ){
+        Serial.printf("0x%X ",_data_write[_i]);
+      }
+      else{
+        Serial.printf("0x0%X ",_data_write[_i]);
+      } 
+    }
+    Serial.printf("]\r\n");
+    #endif
+#pragma endregion
+
+
+
+
+    /**** Write data ****/ 
+    rs485.flush(); 
+    for(int _i=0; _i<8; _i++) rs485.write(_data_write[_i]);
+    
+    vTaskDelay(300);
+
+
+    /**** Read data ****/
+    if(rs485.available()){
+
+    for(byte _i=0; _i<sizeof(_data_read); _i++) _data_read[_i] = 0x00; //clear buffer
+    _byte_cnt = 0;
+
+    //correct data
+      do{
+          _data_read[_byte_cnt++] = rs485.read();
+          if(_data_read[0] == 0x00){ //แก้ไช bug เนื่องจากอ่านค่าแรกได้ 0x00
+              _byte_cnt =0;
+          }
+      // }while(rs485.available()>0);
+      }while(rs485.available()>0 && _byte_cnt<sizeof(_data_read));
+      
+
+      /***** Debug monitor ****/
+      #ifdef modbusRTU_Debug
+      Serial.printf("Data read(%d): [ ",_byte_cnt);
+        for(byte _i=0; _i<_byte_cnt; _i++){
+            if( _data_read[_i] > 0x0F ){
+              Serial.printf("0x%X ",_data_read[_i]);
+            }
+            else{
+              Serial.printf("0x0%X ",_data_read[_i]);
+            } 
+        }
+        Serial.println("]");
+        Serial.printf("Byte Count = %d\r\n",_byte_cnt);
+        #endif
+    } 
+
+    
+   
+   if(_byte_cnt == 8){
+
+      for(int i=0; i<8; i++)
+      {
+        _data_check[i] = _data_read[i];
+      }
+
+
+      /***** Debug monitor ****/
+      #ifdef modbusRTU_Debug
+      Serial.printf("Data check(%d): [ ",sizeof(_data_check));
+      for(byte _i=0; _i<sizeof(_data_check); _i++){
+          if( _data_check[_i] > 0x0F ){
+            Serial.printf("0x%X ",_data_check[_i]);
+          }
+          else{
+            Serial.printf("0x0%X ",_data_check[_i]);
+          } 
+      }
+      Serial.println("]");
+      #endif
+    }
+    else if(_byte_cnt > 8){
+
+      uint8_t _addcnt = _byte_cnt - 8;
+      for(int i=0; i<8; i++)
+      {
+        _data_check[i] = _data_read[i+_addcnt]; 
+      }
+
+
+
+      /***** Debug monitor ****/
+      #ifdef modbusRTU_Debug
+      Serial.printf("Data check(%d): [ ",sizeof(_data_check));
+      for(byte _i=0; _i<sizeof(_data_check); _i++){
+          if( _data_check[_i] > 0x0F ){
+            Serial.printf("0x%X ",_data_check[_i]);
+          }
+          else{
+            Serial.printf("0x0%X ",_data_check[_i]);
+          } 
+      }
+      Serial.println("]");
+      #endif
+    }
+    else
+    {
+      Serial.printf("Error: data error\r\n");
+      return -1;
+    }
+
+
+    /*** crc check for data read ***/ 
+    _crc = 0xffff;
+    _crc_r = 0xffff;
+    
+    // Generate CRC16
+    for(byte _i=0; _i < sizeof(_data_check)-2; _i++){
+        _crc = crc16_update(_crc, _data_check[_i]);
+    } 
+    #ifdef modbusRTU_Debug
+    Serial.printf("Debug: _crc = 0x%X\r\n",_crc);
+    #endif
+
+    // read crc byte from data_check
+    _crc_r = _data_check[sizeof(_data_check)-1]; //Serial.print(">>"); Serial.println(_crc_r,HEX);
+    _crc_r = _crc_r <<8; //Serial.print(">>"); Serial.println(_crc_r,HEX);
+    _crc_r = _crc_r + _data_check[sizeof(_data_check)-2]; //Serial.print(">>"); Serial.println(_crc_r,HEX);      
+    #ifdef modbusRTU_Debug 
+    Serial.printf("Debug: _crc_r = 0x%X\r\n",_crc_r);
+    #endif
+
+    //return ON/OFF status
+    if(_crc_r == _crc)
+    {
+
+      Serial.printf("Info: Success to set new Address[%d]\r\n",new_id);
+      return new_id;
+    }  
+    else
+    {
+      Serial.printf("Error: crc16\r\n");
+       return -1;
+    } 
+}
+
+/***********************************************************************
+ * FUNCTION:    WATER_FLOW_METER_flowrate
+ * DESCRIPTION: Set Address for WATER_FLOW_METER Module [1-252]
+ * PARAMETERS:  id
+ * RETURNED:    Flow water(m^3) cubic meters
+ ***********************************************************************/
+float tiny32_v3::WATER_FLOW_METER_flowrate(uint8_t id)
+{
+    // #define modbusRTU_Debug
+    float _flowrate;
+    uint16_t _crc = 0xffff;
+    uint16_t _crc_r = 0xffff;
+    uint16_t _temp_hex_16bit = 0xffff;
+
+
+    uint8_t _data_write[8];
+    uint8_t _data_read[20];
+    uint8_t _byte_cnt = 0;
+    uint8_t _data_check[11];
+
+      _data_write[0] = id;
+      _data_write[1] = 0x03;
+      _data_write[2] = 0x00;
+      _data_write[3] = 0x00;
+      _data_write[4] = 0x00;
+      _data_write[5] = 0x03;
+
+    // Generate CRC16
+    for(byte _i=0; _i < sizeof(_data_write)-2; _i++){
+        _crc = crc16_update(_crc, _data_write[_i]);
+    } 
+
+
+  // Insert CRC16 to data byte
+    #ifdef modbusRTU_Debug
+    Serial.printf("_crc = 0x%02X\r\n",_crc);
+    #endif
+    _data_write[sizeof(_data_write)-1] = _crc >> 8;          
+    _data_write[sizeof(_data_write)-2]= _crc - _data_write[sizeof(_data_write)-1]*0x0100 ;  
+
+
+
+    /***** Debug monitor ****/
+    #ifdef modbusRTU_Debug
+    Serial.printf("Data write(%d): [ ",sizeof(_data_write));
+    for(byte _i=0; _i<sizeof(_data_write); _i++){
+      if( _data_write[_i] > 0x0F ){
+        Serial.printf("0x%X ",_data_write[_i]);
+      }
+      else{
+        Serial.printf("0x0%X ",_data_write[_i]);
+      } 
+    }
+    Serial.printf("]\r\n");
+    #endif
+
+
+
+    /**** Write data ****/ 
+    rs485.flush(); 
+    for(int _i=0; _i<8; _i++) rs485.write(_data_write[_i]);
+    
+    // vTaskDelay(300);
+
+
+    /**** Read data ****/
+    if(rs485.available()){
+
+    for(byte _i=0; _i<sizeof(_data_read); _i++) _data_read[_i] = 0x00; //clear buffer
+    _byte_cnt = 0;
+
+    //correct data
+      do{
+          _data_read[_byte_cnt++] = rs485.read();
+          if(_data_read[0] == 0x00){ //แก้ไช bug เนื่องจากอ่านค่าแรกได้ 0x00
+              _byte_cnt =0;
+          }
+      // }while(rs485.available()>0);
+      }while(rs485.available()>0 && _byte_cnt<sizeof(_data_read));
+      
+
+      /***** Debug monitor ****/
+      #ifdef modbusRTU_Debug
+      Serial.printf("Data read(%d): [ ",_byte_cnt);
+        for(byte _i=0; _i<_byte_cnt; _i++){
+            if( _data_read[_i] > 0x0F ){
+              Serial.printf("0x%X ",_data_read[_i]);
+            }
+            else{
+              Serial.printf("0x0%X ",_data_read[_i]);
+            } 
+        }
+        Serial.println("]");
+        Serial.printf("Debug: Count byte => %d\r\n",_byte_cnt);
+        #endif
+    } 
+
+    
+    /**** correct data to buffer variable ****/
+    if(_byte_cnt == 11){
+
+    //Collect data
+    for(int i=0; i<11; i++)
+    {
+      _data_check[i] = _data_read[i];
+    }
+
+
+      /***** Debug monitor ****/
+      #ifdef modbusRTU_Debug
+      Serial.printf("Data check(%d): [ ",sizeof(_data_check));
+      for(byte _i=0; _i<sizeof(_data_check); _i++){
+          if( _data_check[_i] > 0x0F ){
+            Serial.printf("0x%X ",_data_check[_i]);
+          }
+          else{
+            Serial.printf("0x0%X ",_data_check[_i]);
+          } 
+      }
+      Serial.println("]");
+      #endif
+    }
+    else if(_byte_cnt > 11){
+
+      uint8_t _addcnt = _byte_cnt - 11; //ตัวแปรชดเชยการอ่านค่าผิดตำแหน่ง
+
+      //Collect data
+      for(int i=0; i<9; i++)
+      {
+        _data_check[i] = _data_read[i+_addcnt];
+      }
+
+      /***** Debug monitor ****/
+      #ifdef modbusRTU_Debug
+      Serial.printf("Data check(%d): [ ",sizeof(_data_check));
+      for(byte _i=0; _i<sizeof(_data_check); _i++){
+          if( _data_check[_i] > 0x0F ){
+            Serial.printf("0x%X ",_data_check[_i]);
+          }
+          else{
+            Serial.printf("0x0%X ",_data_check[_i]);
+          } 
+      }
+      Serial.println("]");
+      #endif
+    }
+    else
+    {
+      Serial.printf("Error: data error\r\n");
+      return 0;
+    }
+
+
+    /*** crc check for data read ***/ 
+    _crc = 0xffff;
+    _crc_r = 0xffff;
+    
+    // Generate CRC16
+    for(byte _i=0; _i < sizeof(_data_check)-2; _i++){
+        _crc = crc16_update(_crc, _data_check[_i]);
+    } 
+    #ifdef modbusRTU_Debug
+    Serial.printf("Debug: _crc = 0x%X\r\n",_crc);
+    #endif
+
+    // read crc byte from data_check
+    _crc_r = _data_check[sizeof(_data_check)-1]; //Serial.print(">>"); Serial.println(_crc_r,HEX);
+    _crc_r = _crc_r <<8; //Serial.print(">>"); Serial.println(_crc_r,HEX);
+    _crc_r = _crc_r + _data_check[sizeof(_data_check)-2]; //Serial.print(">>"); Serial.println(_crc_r,HEX);      
+    #ifdef modbusRTU_Debug 
+    Serial.printf("Debug: _crc_r = 0x%X\r\n",_crc_r);
+    #endif
+
+    //return ON/OFF status
+    if(_crc_r == _crc)
+    {
+
+      //**** Read Humidity ****
+      _temp_hex_16bit = _data_check[7];  //Serial.printf("Debug: _temp_hex = 0x%X\r\n",_temp_hex);
+      _temp_hex_16bit = _temp_hex_16bit<<8;   //Serial.printf("Debug: _temp_hex = 0x%X\r\n",_temp_hex);
+      _temp_hex_16bit = _temp_hex_16bit | _data_check[8]; //Serial.printf("Debug: _temp_hex = 0x%X(%d)\r\n",_temp_hex,_temp_hex);
+      _flowrate = (float)_temp_hex_16bit/100;
+
+      #ifdef modbusRTU_Debug
+      Serial.printf("Debug: temp => %d\r\n",_temp_hex_16bit);
+      #endif
+
+      return _flowrate;
     }  
     else
     {

@@ -3,7 +3,7 @@
  * Description  :     Class for Hardware config and function for tiny32_v3 module
  * Author       :     Tenergy Innovation Co., Ltd.
  * Date         :     23 Nov 2021
- * Revision     :     3.2
+ * Revision     :     3.3
  * Rev1.0       :     Original 
  * Rev1.1       :     Add TimeStamp_minute  
  *                    Add TimeStamp_24hr_minute
@@ -20,6 +20,7 @@
  *                    Add WTR10_E(SHT20) temperature and humidity sensor (RS485)
  * Rev3.1       :     Add XY-MD02(SHT20) temperature and humidity sensor (RS485)    
  * Rev3.2       :     Add SOIL MOISTURE PR-3000-H-N01 sensor (RS485) fix id = 1, baud rate = 4800  
+ * Rev3.3       :     Add RS485 Water Flow Meter RS485 MODBUS output  
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@innovation.co.th
  * TEL          :     089-140-7205
@@ -33,7 +34,7 @@
 class tiny32_v3
 {
 private:
-#define version_c  "3.2"
+#define version_c  "3.3"
 
     /* data */
 
@@ -130,5 +131,12 @@ bool PR3000_H_N01_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
 bool PR3000_H_N01(float &temp, float &humi);
 float PR3000_H_N01_tempeature();
 float PR3000_H_N01_humidity();
+
+/* RS485 Water Flow Meter RS485 MODBUS output  */
+bool WATER_FLOW_METER_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
+int8_t WATER_FLOW_METER_searchAddress(void);
+int8_t WATER_FLOW_METER_SetAddress(uint8_t id, uint8_t new_id);
+float WATER_FLOW_METER_flowrate(uint8_t id);
 };
+
 #endif
