@@ -3,7 +3,7 @@
  * Description  :     Class for Hardware config and function for tiny32_v3 module
  * Author       :     Tenergy Innovation Co., Ltd.
  * Date         :     23 Nov 2021
- * Revision     :     3.3
+ * Revision     :     3.4
  * Rev1.0       :     Original 
  * Rev1.1       :     Add TimeStamp_minute  
  *                    Add TimeStamp_24hr_minute
@@ -21,6 +21,7 @@
  * Rev3.1       :     Add XY-MD02(SHT20) temperature and humidity sensor (RS485)    
  * Rev3.2       :     Add SOIL MOISTURE PR-3000-H-N01 sensor (RS485) fix id = 1, baud rate = 4800  
  * Rev3.3       :     Add RS485 Water Flow Meter RS485 MODBUS output  
+ * Rev3.4       :     Add PYR20-Solar Radiation/Pyranometer Sensor, RS485, Modbus    
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@innovation.co.th
  * TEL          :     089-140-7205
@@ -34,7 +35,7 @@
 class tiny32_v3
 {
 private:
-#define version_c  "3.3"
+#define version_c  "3.4"
 
     /* data */
 
@@ -137,6 +138,13 @@ bool WATER_FLOW_METER_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
 int8_t WATER_FLOW_METER_searchAddress(void);
 int8_t WATER_FLOW_METER_SetAddress(uint8_t id, uint8_t new_id);
 float WATER_FLOW_METER_flowrate(uint8_t id);
-};
 
+
+/* PYR20-Solar Radiation/Pyranometer Sensor, RS485, Modbus */
+bool PYR20_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
+int8_t PYR20_searchAddress(void);
+int8_t PYR20_SetAddress(uint8_t id, uint8_t new_id);
+int16_t PYR20_read(uint8_t id);
+
+};
 #endif
