@@ -21,7 +21,8 @@
  * Rev3.1       :     Add XY-MD02(SHT20) temperature and humidity sensor (RS485)    
  * Rev3.2       :     Add SOIL MOISTURE PR-3000-H-N01 sensor (RS485) fix id = 1, baud rate = 4800  
  * Rev3.3       :     Add RS485 Water Flow Meter RS485 MODBUS output  
- * Rev3.4       :     Add PYR20-Solar Radiation/Pyranometer Sensor, RS485, Modbus    
+ * Rev3.4       :     Add PYR20-Solar Radiation/Pyranometer Sensor, RS485, Modbus   
+ * Rev3.5       :     Add tiny32 ModbusRTU communication   
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@innovation.co.th
  * TEL          :     089-140-7205
@@ -35,7 +36,7 @@
 class tiny32_v3
 {
 private:
-#define version_c  "3.4"
+#define version_c  "3.5"
 
     /* data */
 
@@ -145,6 +146,10 @@ bool PYR20_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
 int8_t PYR20_searchAddress(void);
 int8_t PYR20_SetAddress(uint8_t id, uint8_t new_id);
 int16_t PYR20_read(uint8_t id);
+
+/* tiny32 ModbusRTU communication*/
+float tiny32_ModbusRTU(uint8_t id);
+bool tiny32_ModbusRTU_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
 
 };
 #endif
