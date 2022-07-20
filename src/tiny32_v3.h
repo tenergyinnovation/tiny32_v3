@@ -151,7 +151,6 @@ int16_t PYR20_read(uint8_t id);
 bool tiny32_ModbusRTU_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
 int8_t tiny32_ModbusRTU_searchAddress(void);
 int8_t tiny32_ModbusRTU_setAddress(uint8_t id, uint8_t new_id);
-float tiny32_ModbusRTU(uint8_t id);
 bool tiny32_ModbusRTU(uint8_t id, float &val1, float &val2, float &val3, float &val4, float &val5, float &val6, float &val7, float &val8, float &val9, float &val10);
 bool tiny32_ModbusRTU(uint8_t id, float &val1, float &val2, float &val3, float &val4, float &val5, float &val6, float &val7, float &val8, float &val9);
 bool tiny32_ModbusRTU(uint8_t id, float &val1, float &val2, float &val3, float &val4, float &val5, float &val6, float &val7, float &val8);
@@ -162,10 +161,6 @@ bool tiny32_ModbusRTU(uint8_t id, float &val1, float &val2, float &val3, float &
 bool tiny32_ModbusRTU(uint8_t id, float &val1, float &val2, float &val3);
 bool tiny32_ModbusRTU(uint8_t id, float &val1, float &val2);
 bool tiny32_ModbusRTU(uint8_t id, float &val1);
-
-
-
-
 
 
 };
