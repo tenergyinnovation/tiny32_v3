@@ -23,6 +23,7 @@
  * Rev3.3       :     Add RS485 Water Flow Meter RS485 MODBUS output  
  * Rev3.4       :     Add PYR20-Solar Radiation/Pyranometer Sensor, RS485, Modbus   
  * Rev3.5       :     Add tiny32 ModbusRTU communication   
+ * Rev3.5.1     :     Fix bug for modbusRTU by relay 300mS after write modbus RTU (complier of some computer problem)  
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@innovation.co.th
  * TEL          :     089-140-7205
@@ -36,7 +37,7 @@
 class tiny32_v3
 {
 private:
-#define version_c  "3.5"
+#define version_c  "3.5.1"
 
     /* data */
 

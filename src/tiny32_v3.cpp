@@ -7323,7 +7323,7 @@ float tiny32_v3::WATER_FLOW_METER_flowrate(uint8_t id)
     rs485.flush(); 
     for(int _i=0; _i<8; _i++) rs485.write(_data_write[_i]);
     
-    // vTaskDelay(300);
+    vTaskDelay(300);
 
 
     /**** Read data ****/
@@ -7983,7 +7983,7 @@ int16_t tiny32_v3::PYR20_read(uint8_t id)
     rs485.flush(); 
     for(int _i=0; _i<8; _i++) rs485.write(_data_write[_i]);
     
-    // vTaskDelay(300);
+    vTaskDelay(300);
 
 
     /**** Read data ****/
