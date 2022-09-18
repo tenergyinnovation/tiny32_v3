@@ -3,7 +3,7 @@
  * Description  :     Class for Hardware config and function for tiny32_v3 module
  * Author       :     Tenergy Innovation Co., Ltd.
  * Date         :     23 Nov 2021
- * Revision     :     3.4
+ * Revision     :     3.5.3
  * Rev1.0       :     Original 
  * Rev1.1       :     Add TimeStamp_minute  
  *                    Add TimeStamp_24hr_minute
@@ -25,6 +25,7 @@
  * Rev3.5       :     Add tiny32 ModbusRTU communication   
  * Rev3.5.1     :     Fix bug for modbusRTU by relay 300mS after write modbus RTU (complier of some computer problem)  
  * Rev3.5.2     :     Add Example_OTA.ino
+ * Rev3.5.3     :     Revise code for Add RS485 Water Flow Meter RS485 MODBUS output (Rev3.3)  
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@innovation.co.th
  * TEL          :     089-140-7205
@@ -38,7 +39,7 @@
 class tiny32_v3
 {
 private:
-#define version_c  "3.5.2"
+#define version_c  "3.5.3"
 
 public:
 /**************************************/
@@ -138,7 +139,7 @@ float PR3000_H_N01_humidity();
 bool WATER_FLOW_METER_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
 int8_t WATER_FLOW_METER_searchAddress(void);
 int8_t WATER_FLOW_METER_SetAddress(uint8_t id, uint8_t new_id);
-float WATER_FLOW_METER_flowrate(uint8_t id);
+float WATER_FLOW_METER(uint8_t id);
 
 
 /* PYR20-Solar Radiation/Pyranometer Sensor, RS485, Modbus */
