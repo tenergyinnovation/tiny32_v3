@@ -2,8 +2,8 @@
  * File         :     tiny32_v3.h
  * Description  :     Class for Hardware config and function for tiny32_v3 module
  * Author       :     Tenergy Innovation Co., Ltd.
- * Date         :     6 Oct 2022
- * Revision     :     3.7
+ * Date         :     23 Nov 2021
+ * Revision     :     3.6
  * Rev1.0       :     Original 
  * Rev1.1       :     Add TimeStamp_minute  
  *                    Add TimeStamp_24hr_minute
@@ -26,8 +26,9 @@
  * Rev3.5.1     :     Fix bug for modbusRTU by relay 300mS after write modbus RTU (complier of some computer problem)  
  * Rev3.5.2     :     Add Example_OTA.ino
  * Rev3.5.3     :     Revise code for Add RS485 Water Flow Meter RS485 MODBUS output (Rev3.3)  
- * Rev3.6       :     Add ENenergic ModbusRTU Power Meter
+ * Rev3.6     :       Add ENenergic ModbusRTU Power Meter
  * Rev3.7       :     Add Schneider EasyLogic PM2xxx Digital Power Meter  
+ * Rev3.8       :     Add EASTRON Powermeter model : SDM1210CT
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@innovation.co.th
  * TEL          :     089-140-7205
@@ -41,7 +42,7 @@
 class tiny32_v3
 {
 private:
-#define version_c  "3.7"
+#define version_c  "3.8"
 
 public:
 /**************************************/
@@ -168,19 +169,17 @@ bool tiny32_ModbusRTU(uint8_t id, float &val1);
 
 
 /* Enenergic ModbusRTU PowerMeter*/
-bool ENenergic_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
-int8_t ENenergic_searchAddress(void);
-int8_t ENenergic_setAddress(uint8_t id, uint8_t new_id);
-float ENenergic_getTemperature(uint8_t id);
-bool ENenergic_Volt_L_N(uint8_t id, float &L1_N, float &L2_N, float &L3_N);
-bool ENenergic_Volt_L_L(uint8_t id, float &L1_L2, float &L2_L3, float &L3_L1);
-bool ENenergic_Current_L(uint8_t id, float &L1, float &L2, float &L3);
-float ENenergic_NeutralCurrent(uint8_t id);
-float ENenergic_Freq(uint8_t id);
-bool ENenergic_PhaseVolt_Angle(uint8_t id, float &L1, float &L2, float &L3);
-bool ENenergic_PhaseCurrent_Angle(uint8_t id, float &L1, float &L2, float &L3);
-
-
+bool tiny32_ENenergic_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
+int8_t tiny32_ENenergic_searchAddress(void);
+int8_t tiny32_ENenergic_setAddress(uint8_t id, uint8_t new_id);
+float tiny32_ENenergic_getTemperature(uint8_t id);
+bool tiny32_ENenergic_Volt_L_N(uint8_t id, float &L1_N, float &L2_N, float &L3_N);
+bool tiny32_ENenergic_Volt_L_L(uint8_t id, float &L1_L2, float &L2_L3, float &L3_L1);
+bool tiny32_ENenergic_Current_L(uint8_t id, float &L1, float &L2, float &L3);
+float tiny32_ENenergic_NeutralCurrent(uint8_t id);
+float tiny32_ENenergic_Freq(uint8_t id);
+bool tiny32_ENenergic_PhaseVolt_Angle(uint8_t id, float &L1, float &L2, float &L3);
+bool tiny32_ENenergic_PhaseCurrent_Angle(uint8_t id, float &L1, float &L2, float &L3);
 
 /* Schneider EasyLogic PM2xxx Digital Power Meter */
 bool SchneiderPM2xxx_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
@@ -240,6 +239,18 @@ float SchneiderPM2xxx_PowerFactorTotal(uint8_t id);
 
 float SchneiderPM2xxx_Freq(uint8_t id);
 
+/* EASTRON 120CT Modbus Powermeter */
+bool tiny32_SDM120CT_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
+int8_t tiny32_SDM120CT_searchAddress(void);
+int8_t tiny32_SDM120CT_setAddress(uint8_t id, uint8_t new_id);
+float tiny32_SDM120CT_Volt(uint8_t id);
+float tiny32_SDM120CT_Freq(uint8_t id);
+float tiny32_SDM120CT_Power(uint8_t id);
+float tiny32_SDM120CT_Current(uint8_t id);
+float tiny32_SDM120CT_AP_Power(uint8_t id); //Apparent power
+float tiny32_SDM120CT_Reac_Power(uint8_t id); //Reactive power
+float tiny32_SDM120CT_Total_Energy(uint8_t id);
+float tiny32_SDM120CT_POWER_FACTOR(uint8_t id);
 
 
 
