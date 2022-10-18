@@ -92,7 +92,7 @@ bool ec_modbusRTU_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
 
 public:
 /* PZEM-016 Modbus RTU AC power meter module */
-bool   PZEM_016(uint8_t id, float &volt, float &amp, float &power, uint32_t &engergy, float &freq, float &pf);
+bool   PZEM_016(uint8_t id, float &volt, float &amp, float &power, uint32_t &energy, float &freq, float &pf);
 float  PZEM_016_Volt(uint8_t id);
 float  PZEM_016_Amp(uint8_t id);
 float  PZEM_016_Power(uint8_t id);
@@ -107,7 +107,7 @@ bool PZEM_016_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
 
 
 /* PZEM-003 Modbus RTU DC power meter module */
-bool   PZEM_003(uint8_t id, float &volt, float &amp, float &power, uint32_t &engergy);
+bool   PZEM_003(uint8_t id, float &volt, float &amp, float &power, uint32_t &energy);
 float  PZEM_003_Volt(uint8_t id);
 float  PZEM_003_Amp(uint8_t id);
 float  PZEM_003_Power(uint8_t id);

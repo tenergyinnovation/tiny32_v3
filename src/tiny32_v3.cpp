@@ -589,7 +589,7 @@ bool tiny32_v3::ec_modbusRTU_begin(uint8_t rx, uint8_t tx)
  * PARAMETERS:  address(id)
  * RETURNED:    true, false and reference parameter => volt, amp, power, energy, freq, pf
  ***********************************************************************/
-bool tiny32_v3::PZEM_016(uint8_t id, float &volt, float &amp, float &power, uint32_t &engergy, float &freq, float &pf)
+bool tiny32_v3::PZEM_016(uint8_t id, float &volt, float &amp, float &power, uint32_t &energy, float &freq, float &pf)
 {
   // #define modbusRTU_Debug
 
@@ -2832,7 +2832,7 @@ bool tiny32_v3::PZEM_016_begin(uint8_t rx, uint8_t tx)
  * PARAMETERS:  address(id)
  * RETURNED:    true, false and reference parameter => volt, amp, power, energy
  ***********************************************************************/
-bool tiny32_v3::PZEM_003(uint8_t id, float &volt, float &amp, float &power, uint32_t &engergy)
+bool tiny32_v3::PZEM_003(uint8_t id, float &volt, float &amp, float &power, uint32_t &energy)
 {
   // #define modbusRTU_Debug
 
