@@ -26,9 +26,10 @@
  * Rev3.5.1     :     Fix bug for modbusRTU by relay 300mS after write modbus RTU (complier of some computer problem)  
  * Rev3.5.2     :     Add Example_OTA.ino
  * Rev3.5.3     :     Revise code for Add RS485 Water Flow Meter RS485 MODBUS output (Rev3.3)  
- * Rev3.6     :       Add ENenergic ModbusRTU Power Meter
+ * Rev3.6       :     Add ENenergic ModbusRTU Power Meter
  * Rev3.7       :     Add Schneider EasyLogic PM2xxx Digital Power Meter  
  * Rev3.8       :     Add EASTRON Powermeter model : SDM1210CT
+ * Rev3.8.1     :     fix bug pzem-016 and pzem-003
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@innovation.co.th
  * TEL          :     089-140-7205
@@ -42,7 +43,7 @@
 class tiny32_v3
 {
 private:
-#define version_c  "3.8"
+#define version_c  "3.8.1"
 
 public:
 /**************************************/
