@@ -30,6 +30,7 @@
  * Rev3.7       :     Add Schneider EasyLogic PM2xxx Digital Power Meter  
  * Rev3.8       :     Add EASTRON Powermeter model : SDM1210CT
  * Rev3.8.1     :     fix bug pzem-016 and pzem-003
+ * Rev3.9       :     Frequency_Out function for control Frequency to Volage Module with PWM output is 0-10V 
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@innovation.co.th
  * TEL          :     089-140-7205
@@ -43,7 +44,7 @@
 class tiny32_v3
 {
 private:
-#define version_c  "3.8.1"
+#define version_c  "3.9.0"
 
 public:
 /**************************************/
@@ -83,6 +84,7 @@ void TickRedLED(float second);
 void TickBuildinLED(float second);
 bool PWM_Setup(uint8_t channel, double freq, uint8_t resolution_bit, uint8_t pin);
 bool PWM_Drive(uint8_t channel, uint8_t percentage);
+bool Frequency_Out(uint8_t pin, double freq);
 uint16_t TimeStamp_minute_encode(uint16_t y, uint8_t m, uint8_t d, uint8_t h, uint8_t mi);
 uint16_t TimeStamp_24hr_encode(uint16_t h, uint16_t mi);
 void TimeStamp_hour_minute_decode(uint16_t timestemp, uint16_t &h, uint16_t &mi);
