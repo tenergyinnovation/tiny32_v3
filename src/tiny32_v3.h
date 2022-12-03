@@ -31,6 +31,7 @@
  * Rev3.8       :     Add EASTRON Powermeter model : SDM1210CT
  * Rev3.8.1     :     fix bug pzem-016 and pzem-003
  * Rev3.9       :     Frequency_Out function for control Frequency to Volage Module with PWM output is 0-10V 
+ * Rev3.10       :    Add Wind speed sensor Model RS-FS-N01 485 type [PR-3000FSJT-N01]
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@innovation.co.th
  * TEL          :     089-140-7205
@@ -44,7 +45,7 @@
 class tiny32_v3
 {
 private:
-#define version_c  "3.9.0"
+#define version_c  "3.10.0"
 
 public:
 /**************************************/
@@ -255,7 +256,11 @@ float tiny32_SDM120CT_Reac_Power(uint8_t id); //Reactive power
 float tiny32_SDM120CT_Total_Energy(uint8_t id);
 float tiny32_SDM120CT_POWER_FACTOR(uint8_t id);
 
-
+/* Wind speed sensor [PR-3000FSJT-N01] */
+bool tiny32_WIND_RSFSN01_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
+int8_t tiny32_WIND_RSFSN01_searchAddress(void);
+int8_t tiny32_WIND_RSFSN01_setAddress(uint8_t id, uint8_t new_id);
+float tiny32_WIND_RSFSN01_SPEED(uint8_t id);
 
 };
 #endif
