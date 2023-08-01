@@ -32,6 +32,7 @@
  * Rev3.8.1     :     fix bug pzem-016 and pzem-003
  * Rev3.9       :     Frequency_Out function for control Frequency to Volage Module with PWM output is 0-10V 
  * Rev3.10       :    Add Wind speed sensor Model RS-FS-N01 485 type [PR-3000FSJT-N01]
+ * Rev3.10.1       :    Revise and improve of SDM1210CT
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@innovation.co.th
  * TEL          :     089-140-7205
@@ -45,7 +46,7 @@
 class tiny32_v3
 {
 private:
-#define version_c  "3.10.0"
+#define version_c  "3.10.1"
 
 public:
 /**************************************/
@@ -244,17 +245,14 @@ float SchneiderPM2xxx_PowerFactorTotal(uint8_t id);
 float SchneiderPM2xxx_Freq(uint8_t id);
 
 /* EASTRON 120CT Modbus Powermeter */
-bool tiny32_SDM120CT_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
-int8_t tiny32_SDM120CT_searchAddress(void);
-int8_t tiny32_SDM120CT_setAddress(uint8_t id, uint8_t new_id);
-float tiny32_SDM120CT_Volt(uint8_t id);
-float tiny32_SDM120CT_Freq(uint8_t id);
-float tiny32_SDM120CT_Power(uint8_t id);
-float tiny32_SDM120CT_Current(uint8_t id);
-float tiny32_SDM120CT_AP_Power(uint8_t id); //Apparent power
-float tiny32_SDM120CT_Reac_Power(uint8_t id); //Reactive power
-float tiny32_SDM120CT_Total_Energy(uint8_t id);
-float tiny32_SDM120CT_POWER_FACTOR(uint8_t id);
+bool SDM120CT_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
+int8_t SDM120CT_searchAddress(void);
+float SDM120CT_Volt(uint8_t id);
+float SDM120CT_Freq(uint8_t id);
+float SDM120CT_Power(uint8_t id);
+float SDM120CT_Current(uint8_t id);
+float SDM120CT_Total_Energy(uint8_t id);
+float SDM120CT_POWER_FACTOR(uint8_t id);
 
 /* Wind speed sensor [PR-3000FSJT-N01] */
 bool tiny32_WIND_RSFSN01_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
