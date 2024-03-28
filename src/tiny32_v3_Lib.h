@@ -6,7 +6,7 @@
  * Revision     :     1.0
  * Rev1.0       :     Original
  * website      :     http://www.tenergyinnovation.co.th
- * Email        :     uten.boonliam@innovation.co.th
+ * Email        :     uten.boonliam@tenergyinnovation.co.th
  * TEL          :     089-140-7205
  ***********************************************************************/
 
