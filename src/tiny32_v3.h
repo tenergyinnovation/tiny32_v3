@@ -3,7 +3,7 @@
  * Description  :     Class for Hardware config and function for tiny32_v3 module
  * Author       :     Tenergy Innovation Co., Ltd.
  * Date         :     23 Nov 2021
- * Revision     :     3.8.1
+ * Revision     :     3.12.0
  * Rev1.0       :     Original 
  * Rev1.1       :     Add TimeStamp_minute  
  *                    Add TimeStamp_24hr_minute
@@ -34,6 +34,7 @@
  * Rev3.10      :     Add Wind speed sensor Model RS-FS-N01 485 type [PR-3000FSJT-N01]
  * Rev3.10.1    :     Revise and improve of SDM1210CT
  * Rev3.11      :     Add EASTRON Powermeter 3-phase model :SDM630MCT  
+ * Rev3.12      :     Add Chiller_R717 ModbusRTU [27-04-2024]  
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@tenergyinnovation.co.th
  * TEL          :     089-140-7205
@@ -47,7 +48,7 @@
 class tiny32_v3
 {
 private:
-#define version_c  "3.11"
+#define version_c  "3.12"
 
 public:
 /**************************************/
@@ -297,6 +298,39 @@ float SDM630MCT_Sum_Current(uint8_t id); //30030 - 30031 [ID 04 00 30 00 02 ]
 float SDM630MCT_Total_Watt(uint8_t id); //30034 - 30035 [ID 04 00 34 00 02 ]
 float SDM630MCT_Total_VA(uint8_t id); //300057 - 30058 [ID 04 00 38 00 02 ]
 float SDM630MCT_Total_VAr(uint8_t id); //30061 - 30062 [ID 04 00 3C 00 02 ]
+
+/* Chiller R717 ModbusRTU for Read sensor */
+bool CHILLER_R717_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
+
+float CHILLER_R717_AI01_CHILLED_IN(uint8_t id);
+float CHILLER_R717_AI02_CHILLED_OUT(uint8_t id);
+float CHILLER_R717_AI03_COOLED_IN(uint8_t id);
+float CHILLER_R717_AI04_COOLED_OUT(uint8_t id);
+float CHILLER_R717_AI05_SUCTION_TEMP(uint8_t id);
+
+float CHILLER_R717_AI06_DISCHARGE_TEMP(uint8_t id);
+float CHILLER_R717_AI08_COND_PRESS(uint8_t id);
+float CHILLER_R717_AI10_EVAP_PRESS(uint8_t id);
+float CHILLER_R717_Slurry1_Temp(uint8_t id);
+float CHILLER_R717_Slurry2_Temp(uint8_t id);
+
+float CHILLER_R717_Slurry3_Temp(uint8_t id);
+float CHILLER_R717_Slurry4_Temp(uint8_t id);
+float CHILLER_R717_Coil_Temp(uint8_t id);
+float CHILLER_R717_Room_Temp(uint8_t id);
+float CHILLER_R717_CURRENT_COMP(uint8_t id);
+
+float CHILLER_R717_VOLT_COMP(uint8_t id);
+float CHILLER_R717_FREQ_COMP(uint8_t id);
+float CHILLER_R717_POWER_COMP(uint8_t id);
+float CHILLER_R717_PER_COMP(uint8_t id);
+float CHILLER_R717_HOUR_CHILLED_PUMP(uint8_t id);
+
+float CHILLER_R717_HOUR_COMP(uint8_t id);
+float CHILLER_R717_HOUR_COOLED_PUMP(uint8_t id);
+float CHILLER_R717_HOUR_COOLING_TOWER(uint8_t id);
+float CHILLER_R717_SP_ROOM(uint8_t id);
+float CHILLER_R717_TOTAL_KW(uint8_t id);
 
 
 };
