@@ -35,6 +35,7 @@
  * Rev3.10.1    :     Revise and improve of SDM1210CT
  * Rev3.11      :     Add EASTRON Powermeter 3-phase model :SDM630MCT  
  * Rev3.12      :     Add Chiller_R717 ModbusRTU [27-04-2024]  
+ * Rev3.12.1    :     Add Function of EASTRON Powermeter 3-phase         
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@tenergyinnovation.co.th
  * TEL          :     089-140-7205
@@ -48,7 +49,7 @@
 class tiny32_v3
 {
 private:
-#define version_c  "3.12"
+#define version_c  "3.12.1"
 
 public:
 /**************************************/
@@ -267,30 +268,30 @@ float tiny32_WIND_RSFSN01_SPEED(uint8_t id);
 bool SDM630MCT_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
 int8_t SDM630MCT_searchAddress(void);
 
-float SDM630MCT_P1_Volt(uint8_t id); //30000 - 30001 [ID 04 00 00 00 02 ]
-float SDM630MCT_P2_Volt(uint8_t id); //30002 - 30003 [ID 04 00 02 00 02 ]
-float SDM630MCT_P3_Volt(uint8_t id); //30004 - 30005 [ID 04 00 04 00 02 ]
+float SDM630MCT_L1_Volt(uint8_t id); //30000 - 30001 [ID 04 00 00 00 02 ]
+float SDM630MCT_L2_Volt(uint8_t id); //30002 - 30003 [ID 04 00 02 00 02 ]
+float SDM630MCT_L3_Volt(uint8_t id); //30004 - 30005 [ID 04 00 04 00 02 ]
 
-float SDM630MCT_P1_Current(uint8_t id); //30006 - 30007 [ID 04 00 06 00 02 ]
-float SDM630MCT_P2_Current(uint8_t id); //30008 - 30009 [ID 04 00 08 00 02 ]
-float SDM630MCT_P3_Current(uint8_t id); //300A0 - 300A1 [ID 04 00 0A 00 02 ]
+float SDM630MCT_L1_Current(uint8_t id); //30006 - 30007 [ID 04 00 06 00 02 ]
+float SDM630MCT_L2_Current(uint8_t id); //30008 - 30009 [ID 04 00 08 00 02 ]
+float SDM630MCT_L3_Current(uint8_t id); //300A0 - 300A1 [ID 04 00 0A 00 02 ]
 
-float SDM630MCT_P1_Watt(uint8_t id); //300C0 - 3000D [ID 04 00 0C 00 02 ]
-float SDM630MCT_P2_Watt(uint8_t id); //3000E - 3000F [ID 04 00 0E 00 02 ]
-float SDM630MCT_P3_Watt(uint8_t id); //30010 - 30011 [ID 04 00 10 00 02 ]
+float SDM630MCT_L1_Watt(uint8_t id); //300C0 - 3000D [ID 04 00 0C 00 02 ]
+float SDM630MCT_L2_Watt(uint8_t id); //3000E - 3000F [ID 04 00 0E 00 02 ]
+float SDM630MCT_L3_Watt(uint8_t id); //30010 - 30011 [ID 04 00 10 00 02 ]
 
-float SDM630MCT_P1_VA(uint8_t id); //30012 - 30013 [ID 04 00 12 00 02 ]
-float SDM630MCT_P2_VA(uint8_t id); //30014 - 30015 [ID 04 00 14 00 02 ]
-float SDM630MCT_P3_VA(uint8_t id); //30016 - 30017 [ID 04 00 16 00 02 ]
+float SDM630MCT_L1_VA(uint8_t id); //30012 - 30013 [ID 04 00 12 00 02 ]
+float SDM630MCT_L2_VA(uint8_t id); //30014 - 30015 [ID 04 00 14 00 02 ]
+float SDM630MCT_L3_VA(uint8_t id); //30016 - 30017 [ID 04 00 16 00 02 ]
 
 
-float SDM630MCT_P1_VAr(uint8_t id); //30018 - 30019 [ID 04 00 18 00 02 ]
-float SDM630MCT_P2_VAr(uint8_t id); //3001A - 3001B [ID 04 00 1A 00 02 ]
-float SDM630MCT_P3_VAr(uint8_t id); //3001C - 3001D [ID 04 00 1C 00 02 ]
+float SDM630MCT_L1_VAr(uint8_t id); //30018 - 30019 [ID 04 00 18 00 02 ]
+float SDM630MCT_L2_VAr(uint8_t id); //3001A - 3001B [ID 04 00 1A 00 02 ]
+float SDM630MCT_L3_VAr(uint8_t id); //3001C - 3001D [ID 04 00 1C 00 02 ]
 
-float SDM630MCT_P1_PF(uint8_t id); //3001E - 3001F [ID 04 00 1E 00 02 ]
-float SDM630MCT_P2_PF(uint8_t id); //30020 - 30021 [ID 04 00 20 00 02 ]
-float SDM630MCT_P3_PF(uint8_t id); //30022 - 30023 [ID 04 00 22 00 02 ]
+float SDM630MCT_L1_PF(uint8_t id); //3001E - 3001F [ID 04 00 1E 00 02 ]
+float SDM630MCT_L2_PF(uint8_t id); //30020 - 30021 [ID 04 00 20 00 02 ]
+float SDM630MCT_L3_PF(uint8_t id); //30022 - 30023 [ID 04 00 22 00 02 ]
 
 float SDM630MCT_Freq(uint8_t id); //30046 - 30047 [ID 04 00 46 00 02 ]
 
@@ -298,6 +299,11 @@ float SDM630MCT_Sum_Current(uint8_t id); //30030 - 30031 [ID 04 00 30 00 02 ]
 float SDM630MCT_Total_Watt(uint8_t id); //30034 - 30035 [ID 04 00 34 00 02 ]
 float SDM630MCT_Total_VA(uint8_t id); //300057 - 30058 [ID 04 00 38 00 02 ]
 float SDM630MCT_Total_VAr(uint8_t id); //30061 - 30062 [ID 04 00 3C 00 02 ]
+
+float SDM630MCT_L1_Import_kWh(uint8_t id); //30030 - 30031 [ID 04 00 5A 00 02 ]
+float SDM630MCT_L2_Import_kWh(uint8_t id); //30030 - 30031 [ID 04 00 5C 00 02 ]
+float SDM630MCT_L3_Import_kWh(uint8_t id); //30030 - 30031 [ID 04 00 5E 00 02 ]
+float SDM630MCT_Total_Import_kWh(uint8_t id); //30030 - 30031 [ID 04 00 4A 00 02 ]
 
 /* Chiller R717 ModbusRTU for Read sensor */
 bool CHILLER_R717_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
