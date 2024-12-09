@@ -28537,9 +28537,6 @@ float tiny32_v3::SDM630MCT_Total_VAr(uint8_t id)
   }
 }
 
-
-
-
 /***********************************************************************
  * FUNCTION:    SDM630MCT_L1_Import_kWh
  * DESCRIPTION: L1 Import Energy (kWh)
@@ -28551,7 +28548,7 @@ float tiny32_v3::SDM630MCT_L1_Import_kWh(uint8_t id)
   // #define modbusRTU_Debug
 
   float _tempFloat;
-  const byte _byte_len = 9; //จำนวน byte ที่อ่านได้
+  const byte _byte_len = 9; // จำนวน byte ที่อ่านได้
 
   uint16_t _crc = 0xffff;
   uint16_t _crc_r = 0xffff;
@@ -28623,7 +28620,7 @@ float tiny32_v3::SDM630MCT_L1_Import_kWh(uint8_t id)
     {
       _data_read[_byte_cnt++] = rs485.read();
       if ((_data_read[0] == 0x00) || (_data_read[0] == 0xFF))
-      { //แก้ไช bug เนื่องจากอ่านค่าแรกได้ 0x00 หรือ 0xFF
+      { // แก้ไช bug เนื่องจากอ่านค่าแรกได้ 0x00 หรือ 0xFF
         _byte_cnt = 0;
       }
       // }while(rs485.available()>0);
@@ -28727,8 +28724,6 @@ float tiny32_v3::SDM630MCT_L1_Import_kWh(uint8_t id)
   }
 }
 
-
-
 /***********************************************************************
  * FUNCTION:    SDM630MCT_L2_Import_kWh
  * DESCRIPTION: L2 Import Energy (kWh)
@@ -28740,7 +28735,7 @@ float tiny32_v3::SDM630MCT_L2_Import_kWh(uint8_t id)
   // #define modbusRTU_Debug
 
   float _tempFloat;
-  const byte _byte_len = 9; //จำนวน byte ที่อ่านได้
+  const byte _byte_len = 9; // จำนวน byte ที่อ่านได้
 
   uint16_t _crc = 0xffff;
   uint16_t _crc_r = 0xffff;
@@ -28812,7 +28807,7 @@ float tiny32_v3::SDM630MCT_L2_Import_kWh(uint8_t id)
     {
       _data_read[_byte_cnt++] = rs485.read();
       if ((_data_read[0] == 0x00) || (_data_read[0] == 0xFF))
-      { //แก้ไช bug เนื่องจากอ่านค่าแรกได้ 0x00 หรือ 0xFF
+      { // แก้ไช bug เนื่องจากอ่านค่าแรกได้ 0x00 หรือ 0xFF
         _byte_cnt = 0;
       }
       // }while(rs485.available()>0);
@@ -28916,8 +28911,6 @@ float tiny32_v3::SDM630MCT_L2_Import_kWh(uint8_t id)
   }
 }
 
-
-
 /***********************************************************************
  * FUNCTION:    SDM630MCT_L3_Import_kWh
  * DESCRIPTION: L3 Import Energy (kWh)
@@ -28929,7 +28922,7 @@ float tiny32_v3::SDM630MCT_L3_Import_kWh(uint8_t id)
   // #define modbusRTU_Debug
 
   float _tempFloat;
-  const byte _byte_len = 9; //จำนวน byte ที่อ่านได้
+  const byte _byte_len = 9; // จำนวน byte ที่อ่านได้
 
   uint16_t _crc = 0xffff;
   uint16_t _crc_r = 0xffff;
@@ -29001,7 +28994,7 @@ float tiny32_v3::SDM630MCT_L3_Import_kWh(uint8_t id)
     {
       _data_read[_byte_cnt++] = rs485.read();
       if ((_data_read[0] == 0x00) || (_data_read[0] == 0xFF))
-      { //แก้ไช bug เนื่องจากอ่านค่าแรกได้ 0x00 หรือ 0xFF
+      { // แก้ไช bug เนื่องจากอ่านค่าแรกได้ 0x00 หรือ 0xFF
         _byte_cnt = 0;
       }
       // }while(rs485.available()>0);
@@ -29105,8 +29098,6 @@ float tiny32_v3::SDM630MCT_L3_Import_kWh(uint8_t id)
   }
 }
 
-
-
 /***********************************************************************
  * FUNCTION:    SDM630MCT_Total_Import_kWh
  * DESCRIPTION: Total Import Energy (kWh)
@@ -29118,7 +29109,7 @@ float tiny32_v3::SDM630MCT_Total_Import_kWh(uint8_t id)
   // #define modbusRTU_Debug
 
   float _tempFloat;
-  const byte _byte_len = 9; //จำนวน byte ที่อ่านได้
+  const byte _byte_len = 9; // จำนวน byte ที่อ่านได้
 
   uint16_t _crc = 0xffff;
   uint16_t _crc_r = 0xffff;
@@ -29190,7 +29181,7 @@ float tiny32_v3::SDM630MCT_Total_Import_kWh(uint8_t id)
     {
       _data_read[_byte_cnt++] = rs485.read();
       if ((_data_read[0] == 0x00) || (_data_read[0] == 0xFF))
-      { //แก้ไช bug เนื่องจากอ่านค่าแรกได้ 0x00 หรือ 0xFF
+      { // แก้ไช bug เนื่องจากอ่านค่าแรกได้ 0x00 หรือ 0xFF
         _byte_cnt = 0;
       }
       // }while(rs485.available()>0);
@@ -34536,5 +34527,227 @@ float tiny32_v3::CHILLER_R717_TOTAL_KW(uint8_t id)
   {
     Serial.printf("Error: crc16\r\n");
     return -1;
+  }
+}
+
+/***********************************************************************
+ * FUNCTION:    BRC01_begin
+ * DESCRIPTION: set RX and TX pin Bluetooth BLE Speed Sensor Module
+ * PARAMETERS:  rx, tx
+ * RETURNED:    true/ false
+ ***********************************************************************/
+bool tiny32_v3::BRC01_begin(uint8_t rx, uint8_t tx)
+{
+  if (((tx == TXD2) || (tx == TXD3)) && ((rx == RXD2) || (rx == RXD3)))
+  {
+    rs485.begin(9600, SERIAL_8N1, rx, tx);
+    return 1;
+  }
+  else
+  {
+    Serial.printf("Error: Fail to define RS485 port!!\r\n");
+    return 0;
+  }
+}
+
+/***********************************************************************
+ * FUNCTION:    BRC01_begin
+ * DESCRIPTION: set RX and TX pin Bluetooth BLE Speed Sensor Module
+ * PARAMETERS:  rx, tx
+ * RETURNED:    true/ false
+ ***********************************************************************/
+bool tiny32_v3::BRC01_getData(float &speed, float &rpm, int &batt, char *mac)
+{
+
+   int _indexStart, _indexStop;
+  char _charArray[20];
+  char _hexArray[5];
+  char _hexString[20];
+  rs485.flush();
+
+  if (rs485.available() > 0)
+  {
+    char _buffer[50];                                                     // Buffer to hold the data
+    int bytesRead = rs485.readBytesUntil('\n', _buffer, sizeof(_buffer)); // Read until newline or 50 bytes
+    _buffer[bytesRead] = '\0';                                            // Null-terminate the string
+    // Serial.print("Received: ");
+    // Serial.println(_buffer); // Print the received message
+
+    // Example message input: "$TB,6300,D702,4700,,84C2E4DCEAAD,*6B"
+    String _stringTemp = String(_buffer);
+    // Serial.printf("%s\r\n", _stringTemp.c_str());
+
+    // verify first char
+    if (_buffer[0] != '$')
+    {
+      return false;
+    }
+
+
+    //----- remove "$TB," -----
+    _indexStart = _stringTemp.indexOf("$TB,");
+    _indexStop = _stringTemp.indexOf(",");
+    _stringTemp.remove(_indexStart, _indexStop + 1); // remove "$TB,"
+    // Serial.println(_stringTemp);                     //"06300,D702,4700,,84C2E4DCEAAD,*6B"
+
+    //---- claer buffer ----
+    for (int i = 0; i < sizeof(_charArray); i++)
+      _charArray[i] = 0;
+    for (int i = 0; i < sizeof(_hexArray); i++)
+      _hexArray[i] = 0;
+    for (int i = 0; i < sizeof(_hexString); i++)
+      _hexString[i] = 0;
+
+    //----- speed km/h ------
+    _indexStop = _stringTemp.indexOf(",");
+    String _speedHex = _stringTemp.substring(0, _indexStop);
+    // Serial.printf("\t_speedHex = %s\r\n", _speedHex);
+    _stringTemp.remove(0, _indexStop + 1);
+    // Serial.println(_stringTemp); //"D702,4700,,84C2E4DCEAAD,*6B"
+    _speedHex.toCharArray(_charArray, sizeof(_charArray));
+    // Serial.printf("_charArray = %s\r\n", _charArray);
+
+    // for (int i = 0; i < 4; i++)
+    // {
+    //   Serial.printf("_charArray[%d] = %c\r\n", i, _charArray[i]);
+    // }
+    _hexArray[0] = _charArray[2];
+    _hexArray[1] = _charArray[3];
+    _hexArray[2] = _charArray[0];
+    _hexArray[3] = _charArray[1];
+    // for (int i = 0; i < 4; i++)
+    // {
+    //   Serial.printf("_hexArray[%d] = %c\r\n", i, _hexArray[i]);
+    // }
+
+    sprintf(_hexString, "%c%c%c%c", _hexArray[0], _hexArray[1], _hexArray[2], _hexArray[3]);
+    // Serial.printf("_hexString = %s\r\n", _hexString);
+    float _speed = (float)strtol(_hexString, NULL, 16) * 0.1;
+
+    if (_speed > 100)
+    {
+    }
+    else
+    {
+      speed = _speed;
+    }
+    // Serial.printf("\tspeed = %.1fkm/h\r\n", speed); // 9.9 km/h
+
+
+
+
+    //---- claer buffer ----
+    for (int i = 0; i < sizeof(_charArray); i++)
+      _charArray[i] = 0;
+    for (int i = 0; i < sizeof(_hexArray); i++)
+      _hexArray[i] = 0;
+    for (int i = 0; i < sizeof(_hexString); i++)
+      _hexString[i] = 0;
+
+    //----- rpm -----
+    _indexStop = _stringTemp.indexOf(",");
+    String _rpmHex = _stringTemp.substring(0, _indexStop);
+    // Serial.printf("\t_rpmHex = %s\r\n", _rpmHex);
+    _stringTemp.remove(0, _indexStop + 1);
+    // Serial.println(_stringTemp); //"4700,,84C2E4DCEAAD,*6B"
+    _rpmHex.toCharArray(_charArray, sizeof(_charArray));
+    // Serial.printf("_charArray = %s\r\n", _charArray);
+
+    // for (int i = 0; i < 4; i++)
+    // {
+    //   Serial.printf("_charArray[%d] = %c\r\n", i, _charArray[i]);
+    // }
+    _hexArray[0] = _charArray[2];
+    _hexArray[1] = _charArray[3];
+    _hexArray[2] = _charArray[0];
+    _hexArray[3] = _charArray[1];
+    // for (int i = 0; i < 4; i++)
+    // {
+    //   Serial.printf("_hexArray[%d] = %c\r\n", i, _hexArray[i]);
+    // }
+
+    sprintf(_hexString, "%c%c%c%c", _hexArray[0], _hexArray[1], _hexArray[2], _hexArray[3]);
+    // Serial.printf("_hexString = %s\r\n", _hexString);
+    float _rpm = (float)strtol(_hexString, NULL, 16) * 0.1;
+
+    // fix bug
+    if (_rpm > 100)
+    {
+      NULL;
+    }
+    else
+    {
+      rpm = _rpm;
+    }
+
+    // Serial.printf("\trpm = %.1frpm\r\n", rpm); // 72.7rpm
+    // Serial.println("----------------------");
+
+
+    //---- claer buffer ----
+    for (int i = 0; i < sizeof(_charArray); i++)
+      _charArray[i] = 0;
+    for (int i = 0; i < sizeof(_hexArray); i++)
+      _hexArray[i] = 0;
+    for (int i = 0; i < sizeof(_hexString); i++)
+      _hexString[i] = 0;
+
+    //----- battery -----
+    _indexStop = _stringTemp.indexOf(",");
+    String _batteryHex = _stringTemp.substring(0, _indexStop);
+    // Serial.printf("\t_batteryHex = %s\r\n", _batteryHex);
+    _stringTemp.remove(0, _indexStop + 2);
+    // Serial.println(_stringTemp); //"84C2E4DCEAAD,*6B"
+    // Serial.println(_stringTemp); //"84C2E4DCEAAD,*6B"
+    _batteryHex.toCharArray(_charArray, sizeof(_charArray));
+    // Serial.printf("_charArray = %s\r\n", _charArray);
+
+    // for (int i = 0; i < 4; i++)
+    // {
+    //   Serial.printf("_charArray[%d] = %c\r\n", i, _charArray[i]);
+    // }
+    // _hexArray[0] = _charArray[2];
+    // _hexArray[1] = _charArray[3];
+    _hexArray[0] = '0'; // fig hardware bug message = "6301"
+    _hexArray[1] = '0'; // fig hardware bug message = "6301"
+    _hexArray[2] = _charArray[0];
+    _hexArray[3] = _charArray[1];
+
+    // for (int i = 0; i < 4; i++)
+    // {
+    //   Serial.printf("_hexArray[%d] = %c\r\n", i, _hexArray[i]);
+    // }
+
+    sprintf(_hexString, "%c%c%c%c", _hexArray[0], _hexArray[1], _hexArray[2], _hexArray[3]);
+    // Serial.printf("_hexString = %s\r\n", _hexString);
+    batt = (float)strtol(_hexString, NULL, 16);
+    // Serial.printf("\tbatt = %d%c\r\n", batt,37); // 71%
+    // Serial.println("----------------------");
+
+
+
+    //---- claer buffer ----
+    for (int i = 0; i < sizeof(_charArray); i++)
+      _charArray[i] = 0;
+    for (int i = 0; i < sizeof(_hexArray); i++)
+      _hexArray[i] = 0;
+    for (int i = 0; i < sizeof(_hexString); i++)
+      _hexString[i] = 0;
+
+    //--- macaddress ----
+    _indexStop = _stringTemp.indexOf(",");
+    String _macString = _stringTemp.substring(0, _indexStop);
+    // Serial.printf("\t_macString = %s\r\n", _macString);
+    _stringTemp.remove(0, _indexStop + 1);
+    // Serial.println(_stringTemp); //"*6B"
+    strcpy(mac, _macString.c_str());
+    // Serial.printf("\tmac = %s\r\n", mac);
+    // Serial.println("----------------------");
+
+    return true;
+  }
+  else
+  {
+    return 0;
   }
 }
