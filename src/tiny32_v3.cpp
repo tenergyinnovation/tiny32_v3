@@ -34551,8 +34551,8 @@ bool tiny32_v3::BRC01_begin(uint8_t rx, uint8_t tx)
 }
 
 /***********************************************************************
- * FUNCTION:    BRC01_begin
- * DESCRIPTION: set RX and TX pin Bluetooth BLE Speed Sensor Module
+ * FUNCTION:    BRC01_getData
+ * DESCRIPTION: get data from Bluetooth BLE Speed Sensor Module
  * PARAMETERS:  rx, tx
  * RETURNED:    true/ false
  ***********************************************************************/
@@ -34751,6 +34751,7 @@ bool tiny32_v3::BRC01_getData(float &speed, float &rpm, int &batt, char *mac)
     return 0;
   }
 }
+
 
 
 /***********************************************************************
@@ -36868,3 +36869,12 @@ bool tiny32_v3::BRC01_getData(float &speed, float &rpm, int &batt, char *mac)
      return -1;
    }
  }
+ 
+ 
+ /***********************************************************************
+  * FUNCTION:    ATESS_Energy_LoadToday_kWh
+  * DESCRIPTION: Load Consumption, Daily power consumption of load
+  * PARAMETERS:  address(id)
+  * RETURNED:    kWh
+  ***********************************************************************/
+ float tiny32_v3::ATESS_Energy_LoadToday_kWh(uint8_t id)

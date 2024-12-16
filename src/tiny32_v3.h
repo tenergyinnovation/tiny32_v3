@@ -333,18 +333,18 @@ public:
     bool BRC01_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
     bool BRC01_getData(float &speed, float &rpm, int &batt, char *mac);
 
-        /* Inverter ATESS ModbusRTU for Read parameter */
-        bool ATESS_R717_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
-        float ATESS_Power_PV_kW(uint8_t id);
-        float ATESS_Power_bat_kW(uint8_t id);
-        float ATESS_SOC(uint8_t id);
-        float ATESS_ActivePower_Grid_kW(uint8_t id);
-        float ATESS_ActivePower_Load_kW(uint8_t id);
-        float ATESS_Energy_PVToday_kWh(uint8_t id);
-        float ATESS_Energy_BatChargeToday_kWh(uint8_t id);
-        float ATESS_Energy_BatDischargeToday_kWh(uint8_t id);
-        float ATESS_Energy_GridOutToday_kWh(uint8_t id);
-        float ATESS_Energy_GridInToday_kWh(uint8_t id);
-        float ATESS_Energy_LoadToday_kWh(uint8_t id);
+    /* Inverter ATESS ModbusRTU for Read parameter */
+    bool ATESS_R717_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
+    float ATESS_Power_PV_kW(uint8_t id);
+    float ATESS_Power_bat_kW(uint8_t id);
+    float ATESS_SOC(uint8_t id);
+    float ATESS_ActivePower_Grid_kW(uint8_t id);
+    float ATESS_ActivePower_Load_kW(uint8_t id);
+    float ATESS_Energy_PVToday_kWh(uint8_t id);
+    float ATESS_Energy_BatChargeToday_kWh(uint8_t id);
+    float ATESS_Energy_BatDischargeToday_kWh(uint8_t id);
+    float ATESS_Energy_GridOutToday_kWh(uint8_t id);
+    float ATESS_Energy_GridInToday_kWh(uint8_t id);
+    float ATESS_Energy_LoadToday_kWh(uint8_t id);
 };
 #endif
