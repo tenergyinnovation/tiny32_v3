@@ -3,7 +3,7 @@
  * Description  :     Class for Hardware config and function for tiny32_v3 module
  * Author       :     Tenergy Innovation Co., Ltd.
  * Date         :     23 Nov 2021
- * Revision     :     3.12.0
+ * Revision     :     3.14.0
  * Rev1.0       :     Original
  * Rev1.1       :     Add TimeStamp_minute
  *                    Add TimeStamp_24hr_minute
@@ -37,6 +37,7 @@
  * Rev3.12      :     Add Chiller_R717 ModbusRTU [27-04-2024]
  * Rev3.12.1    :     Add Function of EASTRON Powermeter 3-phase
  * Rev3.13      :     Add Test Bluetooth BLE Speed Sensor Module: BRC01-RS485, BRC01-RS232 [2024-12-08]
+ * Rev3.14      :     Add Inverter ATESS ModbusRUT [28-04-2024]
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@tenergyinnovation.co.th
  * TEL          :     089-140-7205
@@ -49,7 +50,7 @@
 class tiny32_v3
 {
 private:
-#define version_c "3.13"
+#define version_c "3.14"
 
 public:
 /**************************************/
@@ -331,5 +332,19 @@ public:
     /* Bluetooth BLE Speed Sensor Module: BRC01-RS485, BRC01-RS232 [2024-12-08]  */
     bool BRC01_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
     bool BRC01_getData(float &speed, float &rpm, int &batt, char *mac);
+
+        /* Inverter ATESS ModbusRTU for Read parameter */
+        bool ATESS_R717_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
+        float ATESS_Power_PV_kW(uint8_t id);
+        float ATESS_Power_bat_kW(uint8_t id);
+        float ATESS_SOC(uint8_t id);
+        float ATESS_ActivePower_Grid_kW(uint8_t id);
+        float ATESS_ActivePower_Load_kW(uint8_t id);
+        float ATESS_Energy_PVToday_kWh(uint8_t id);
+        float ATESS_Energy_BatChargeToday_kWh(uint8_t id);
+        float ATESS_Energy_BatDischargeToday_kWh(uint8_t id);
+        float ATESS_Energy_GridOutToday_kWh(uint8_t id);
+        float ATESS_Energy_GridInToday_kWh(uint8_t id);
+        float ATESS_Energy_LoadToday_kWh(uint8_t id);
 };
 #endif
