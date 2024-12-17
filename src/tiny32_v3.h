@@ -36,8 +36,9 @@
  * Rev3.11      :     Add EASTRON Powermeter 3-phase model :SDM630MCT
  * Rev3.12      :     Add Chiller_R717 ModbusRTU [27-04-2024]
  * Rev3.12.1    :     Add Function of EASTRON Powermeter 3-phase
- * Rev3.13      :     Add Test Bluetooth BLE Speed Sensor Module: BRC01-RS485, BRC01-RS232 [2024-12-08]
+ * Rev3.13      :     Add Test Bluetooth BLE Speed Sensor Module: BRC01-RS485, BRC01-RS232 [08-12-2024]
  * Rev3.14      :     Add Inverter ATESS ModbusRUT [28-04-2024]
+ * Rev3.15      :     Add ModbusRTU relay module [17-12-2024]
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@tenergyinnovation.co.th
  * TEL          :     089-140-7205
@@ -50,7 +51,7 @@
 class tiny32_v3
 {
 private:
-#define version_c "3.14"
+#define version_c "3.15"
 
 public:
 /**************************************/
@@ -346,5 +347,11 @@ public:
     float ATESS_Energy_GridOutToday_kWh(uint8_t id);
     float ATESS_Energy_GridInToday_kWh(uint8_t id);
     float ATESS_Energy_LoadToday_kWh(uint8_t id);
+
+    /* ModbusRTU Relay Module */
+    bool RelayModusRTU_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
+    bool RelayModusRTU_Control(uint8_t id=1, uint8_t channel=1, bool state=true);
+    bool RelayModusRTU_Status(uint8_t id=1, uint8_t channel=1);
+
 };
 #endif
