@@ -39,6 +39,7 @@
  * Rev3.13      :     Add Test Bluetooth BLE Speed Sensor Module: BRC01-RS485, BRC01-RS232 [08-12-2024]
  * Rev3.14      :     Add Inverter ATESS ModbusRUT [28-04-2024]
  * Rev3.15      :     Add ModbusRTU relay module [17-12-2024]
+ * Rev3.16      :     Add TF-Luna ToF LiDAR Module - 8 meters Distance Sensor [22-12-2024]
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@tenergyinnovation.co.th
  * TEL          :     089-140-7205
@@ -51,7 +52,7 @@
 class tiny32_v3
 {
 private:
-#define version_c "3.15"
+#define version_c "3.16"
 
 public:
 /**************************************/
@@ -83,6 +84,14 @@ public:
 private:
     uint8_t _resolution_bit;
     uint16_t crc16_update(uint16_t crc, uint8_t a);
+
+    int dist;     /*----actual distance measurements of LiDAR---*/
+    int strength; /*----signal strength of LiDAR----------------*/
+    float temprature;
+    unsigned char check;        /*----save check value------------------------*/
+    unsigned char uart[9];      /*----save data measured by LiDAR-------------*/
+    const int HEADER = 0x59;    /*----frame header of data package------------*/
+    int rec_debug_state = 0x01; // receive state for frame
 
 public:
     void TickBlueLED(float second);
@@ -350,8 +359,15 @@ public:
 
     /* ModbusRTU Relay Module */
     bool RelayModusRTU_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
-    bool RelayModusRTU_Control(uint8_t id=1, uint8_t channel=1, bool state=true);
-    bool RelayModusRTU_Status(uint8_t id=1, uint8_t channel=1);
+    bool RelayModusRTU_Control(uint8_t id = 1, uint8_t channel = 1, bool state = true);
+    bool RelayModusRTU_Status(uint8_t id = 1, uint8_t channel = 1);
 
+    /* TF-Luna ToF LiDAR Module - 8 meters Distance Sensor */
+    bool TFLiDAR_begin(uint8_t rx = RXD3, uint8_t tx = TXD3);
+    int TFLiDAR_getData();
+    int TFLiDAR_getData(int &strength, float &temprature);
+    bool TFLiDAR_getData(int &distance);
+    bool TFLiDAR_getData(int &distance, int &strength);
+    bool TFLiDAR_getData(int &distance, int &strength, float &temprature);
 };
 #endif
