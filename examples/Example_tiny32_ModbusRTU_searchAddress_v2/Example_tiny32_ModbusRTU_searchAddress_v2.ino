@@ -1,9 +1,9 @@
 /***********************************************************************
- * Project      :     Example_tiny32_ModbusRTU_searchAddress
+ * Project      :     Example_tiny32_ModbusRTU_searchAddress_v2
  * Description  :     Search Address from ModbusRTU sensor
  * Hardware     :     tiny32         
  * Author       :     Tenergy Innovation Co., Ltd.
- * Date         :     14/07/2022
+ * Date         :     04/01/2025
  * Revision     :     1.0
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@tenergyinnovation.co.th
@@ -29,7 +29,7 @@ void loop()
 {
    int8_t _id;
   
-  _id = mcu.tiny32_ModbusRTU_searchAddress();
+  _id = mcu.tiny32_ModbusRTU_searchAddress_v2();
 
   /* check result status */
   if(_id != -1)

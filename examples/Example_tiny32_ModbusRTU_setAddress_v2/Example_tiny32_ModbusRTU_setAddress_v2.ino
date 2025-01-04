@@ -1,9 +1,9 @@
 /***********************************************************************
- * Project      :     tiny32_ModbusRTU_setAddress
+ * Project      :     Example_tiny32_ModbusRTU_setAddress_v2
  * Description  :     set Address for ModbusRTU [1-253]
  * Hardware     :     tiny32         
  * Author       :     Tenergy Innovation Co., Ltd.
- * Date         :     14/07/2022
+ * Date         :     04/01/2025
  * Revision     :     1.0
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@tenergyinnovation.co.th
@@ -32,7 +32,7 @@ void loop()
   Serial.printf("Info: New ID: %d\r\n",new_id);
 
   int8_t _response_id;
-  _response_id = mcu.tiny32_ModbusRTU_setAddress(id,new_id);
+  _response_id = mcu.tiny32_ModbusRTU_setAddress_v2(id,new_id);
 
   /* check status */
   if(_response_id != -1)

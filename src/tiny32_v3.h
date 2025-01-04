@@ -41,6 +41,8 @@
  * Rev3.15      :     Add ModbusRTU relay module [17-12-2024]
  * Rev3.16      :     Add TF-Luna ToF LiDAR Module - 8 meters Distance Sensor [22-12-2024]
  * Rev3.17      :     Additional function and example for tiny32 ModbusRTU [04-01-2025]
+ * Rev3.17.1    :     - Add Example for tiny32_ModbusRTU [04-01-2025]
+ *                    - Add Function new tiny32_ModbusRTU 
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@tenergyinnovation.co.th
  * TEL          :     089-140-7205
@@ -53,9 +55,48 @@
 class tiny32_v3
 {
 private:
-#define version_c "3.17"
+#define version_c "3.17.1"
 
 public:
+
+/****************************************/
+/*   define modbus register address     */
+/* (ตำแหน่งรีเจสเตอร์ที่เก็บค่า parameter ต่างๆ) */
+/****************************************/
+#define modbus_1_addr 0x00  // 0 ตำแหน่ง Address ค่าเซนเซอร์ตัวที่ 1  Address=0
+#define modbus_2_addr 0x02  // 1 ตำแหน่ง Address ค่าเซนเซอร์ตัวที่ 2  Address=2
+#define modbus_3_addr 0x04  // 2 ตำแหน่ง Address ค่าเซนเซอร์ตัวที่ 3  Address=4
+#define modbus_4_addr 0x06  // 3 ตำแหน่ง Address ค่าเซนเซอร์ตัวที่ 4  Address=6
+#define modbus_5_addr 0x08  // 4 ตำแหน่ง Address ค่าเซนเซอร์ตัวที่ 5  Address=8
+#define modbus_6_addr 0x0A  // 5 ตำแหน่ง Address ค่าเซนเซอร์ตัวที่ 6  Address=10
+#define modbus_7_addr 0x0C  // 6 ตำแหน่ง Address ค่าเซนเซอร์ตัวที่ 7  Address=12
+#define modbus_8_addr 0x0E  // 7 ตำแหน่ง Address ค่าเซนเซอร์ตัวที่ 8  Address=14
+#define modbus_9_addr 0x10  // 8 ตำแหน่ง Address ค่าเซนเซอร์ตัวที่ 9  Address=16
+#define modbus_10_addr 0x12 // 9 ตำแหน่ง Address ค่าเซนเซอร์ตัวที่ 10 Address=18
+
+#define modbus_11_addr 0x14 // 10 ตำแหน่ง Address ค่าที่ต้องการแสดงสถานะตัวที่ 1   Address=20
+#define modbus_12_addr 0x16 // 11 ตำแหน่ง Address ค่าที่ต้องการแสดงสถานะตัวที่ 2   Address=22
+#define modbus_13_addr 0x18 // 12 ตำแหน่ง Address ค่าที่ต้องการแสดงสถานะตัวที่ 3   Address=24
+#define modbus_14_addr 0x1A // 13 ตำแหน่ง Address ค่าที่ต้องการแสดงสถานะตัวที่ 4   Address=26
+#define modbus_15_addr 0x1C // 14 ตำแหน่ง Address ค่าที่ต้องการแสดงสถานะตัวที่ 5   Address=28
+#define modbus_16_addr 0x1E // 15 ตำแหน่ง Address ค่าที่ต้องการแสดงสถานะตัวที่ 6   Address=30
+#define modbus_17_addr 0x20 // 16 ตำแหน่ง Address ค่าที่ต้องการแสดงสถานะตัวที่ 7   Address=32
+#define modbus_18_addr 0x22 // 17 ตำแหน่ง Address ค่าที่ต้องการแสดงสถานะตัวที่ 8   Address=34
+#define modbus_19_addr 0x24 // 18 ตำแหน่ง Address ค่าที่ต้องการแสดงสถานะตัวที่ 9   Address=36
+#define modbus_20_addr 0x26 // 19 ตำแหน่ง Address ค่าที่ต้องการแสดงสถานะตัวที่ 10  Address=38
+
+#define modbus_21_addr 0x28 // 20 ตำแหน่ง Address ค่าที่ต้องการควบคุมตัวที่ 1  Address=40
+#define modbus_22_addr 0x2A // 21 ตำแหน่ง Address ค่าที่ต้องการควบคุมตัวที่ 2  Address=42
+#define modbus_23_addr 0x2C // 22 ตำแหน่ง Address ค่าที่ต้องการควบคุมตัวที่ 3  Address=44
+#define modbus_24_addr 0x2E // 23 ตำแหน่ง Address ค่าที่ต้องการควบคุมตัวที่ 4  Address=46
+#define modbus_25_addr 0x30 // 24 ตำแหน่ง Address ค่าที่ต้องการควบคุมตัวที่ 5  Address=48
+#define modbus_26_addr 0x32 // 25 ตำแหน่ง Address ค่าที่ต้องการควบคุมตัวที่ 6  Address=50
+#define modbus_27_addr 0x34 // 26 ตำแหน่ง Address ค่าที่ต้องการควบคุมตัวที่ 7  Address=52
+#define modbus_28_addr 0x35 // 27 ตำแหน่ง Address ค่าที่ต้องการควบคุมตัวที่ 8  Address=54
+#define modbus_29_addr 0x38 // 28 ตำแหน่ง Address ค่าที่ต้องการควบคุมตัวที่ 9  Address=56
+#define modbus_30_addr 0x3A // 29 ตำแหน่ง Address ค่าที่ต้องการควบคุมตัวที่ 10 Address=58
+
+#define id_addr 0x40 // ตำแหน่ง Address เก็บค่า ModbusRTU ID ของบอร์ด Address = 64
 /**************************************/
 /*           GPIO define              */
 /**************************************/
@@ -173,7 +214,11 @@ public:
     /* tiny32 ModbusRTU communication*/
     bool tiny32_ModbusRTU_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
     int8_t tiny32_ModbusRTU_searchAddress(void);
+    int8_t tiny32_ModbusRTU_searchAddress_v2(void);
     int8_t tiny32_ModbusRTU_setAddress(uint8_t id, uint8_t new_id);
+    int8_t tiny32_ModbusRTU_setAddress_v2(uint8_t id, uint8_t new_id);
+    bool tiny32_ModbusRTU_Control(uint8_t id, uint8_t address, uint8_t value);
+    //------
     bool tiny32_ModbusRTU(uint8_t id, float &val1, float &val2, float &val3, float &val4, float &val5, float &val6, float &val7, float &val8, float &val9, float &val10);
     bool tiny32_ModbusRTU(uint8_t id, float &val1, float &val2, float &val3, float &val4, float &val5, float &val6, float &val7, float &val8, float &val9);
     bool tiny32_ModbusRTU(uint8_t id, float &val1, float &val2, float &val3, float &val4, float &val5, float &val6, float &val7, float &val8);
@@ -184,6 +229,18 @@ public:
     bool tiny32_ModbusRTU(uint8_t id, float &val1, float &val2, float &val3);
     bool tiny32_ModbusRTU(uint8_t id, float &val1, float &val2);
     bool tiny32_ModbusRTU(uint8_t id, float &val1);
+    //--------
+    bool tiny32_ModbusRTU_Status(uint8_t id, float &val1, float &val2, float &val3, float &val4, float &val5, float &val6, float &val7, float &val8, float &val9, float &val10);
+    bool tiny32_ModbusRTU_Status(uint8_t id, float &val1, float &val2, float &val3, float &val4, float &val5, float &val6, float &val7, float &val8, float &val9);
+    bool tiny32_ModbusRTU_Status(uint8_t id, float &val1, float &val2, float &val3, float &val4, float &val5, float &val6, float &val7, float &val8);
+    bool tiny32_ModbusRTU_Status(uint8_t id, float &val1, float &val2, float &val3, float &val4, float &val5, float &val6, float &val7);
+    bool tiny32_ModbusRTU_Status(uint8_t id, float &val1, float &val2, float &val3, float &val4, float &val5, float &val6);
+    bool tiny32_ModbusRTU_Status(uint8_t id, float &val1, float &val2, float &val3, float &val4, float &val5);
+    bool tiny32_ModbusRTU_Status(uint8_t id, float &val1, float &val2, float &val3, float &val4);
+    bool tiny32_ModbusRTU_Status(uint8_t id, float &val1, float &val2, float &val3);
+    bool tiny32_ModbusRTU_Status(uint8_t id, float &val1, float &val2);
+    bool tiny32_ModbusRTU_Status(uint8_t id, float &val1);
+    //----
     uint16_t register_read(unsigned int address);
     void register_update(unsigned int address, float *para);
     void register_update(unsigned int address, uint8_t *para);

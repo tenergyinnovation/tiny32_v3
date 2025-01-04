@@ -1,14 +1,15 @@
 /***********************************************************************
- * Project      :     Example_tiny32_ModbusRTU_Master
+ * Project      :     Example_tiny32_ModbusRTU_Master_v2
  * Description  :     Test Master ModbusRTU for interface with tiny32_ModbusRTU_Client
- * Hardware     :     tiny32 v2
+ * Hardware     :     tiny32_v3
  * Author       :     Tenergy Innovation Co., Ltd.
- * Date         :     2/07/2022
- * Revision     :     1.0
+ * Date         :     04/01/2025
+ * Revision     :     1.1
  * Rev1.0       :     Origital
+ * Rev1.1       :     Additonal function tiny32_ModbusRTU_Status [04-01-2025]
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@tenergyinnovation.co.th
- * TEL          :     +66 89-140-7205
+ * TEL          :     +66 89-1407205
  ***********************************************************************/
 #include <Arduino.h>
 #include <tiny32_v3.h>
@@ -31,6 +32,17 @@ float value_7 = 0;
 float value_8 = 0;
 float value_9 = 0;
 float value_10 = 0;
+
+float value_11 = 0;
+float value_12 = 0;
+float value_13 = 0;
+float value_14 = 0;
+float value_15 = 0;
+float value_16 = 0;
+float value_17 = 0;
+float value_18 = 0;
+float value_19 = 0;
+float value_20 = 0;
 
 // ID
 byte id = 1; // ID ของบอร์ด *
@@ -100,5 +112,47 @@ void loop()
   Serial.printf("Info: value_8 => %.2f\r\n", value_8);
   Serial.printf("Info: value_9 => %.2f\r\n", value_9);
   Serial.printf("Info: value_10 => %.2f\r\n", value_10);
+  Serial.printf("*****************************\r\n");
+
+  mcu.tiny32_ModbusRTU_Status(id, value_11, value_12, value_13, value_14, value_15, value_16, value_17, value_18, value_19, value_20);
+  vTaskDelay(1000);
+
+  // mcu.tiny32_ModbusRTU_Status(id,value_11,value_12,value_13,value_14,value_15,value_16,value_17,value_18,value_19);
+  // vTaskDelay(1000);
+
+  // mcu.tiny32_ModbusRTU_Status(id,value_11,value_12,value_13,value_14,value_15,value_16,value_17,value_18);
+  // vTaskDelay(1000);
+
+  // mcu.tiny32_ModbusRTU_Status(id,value_11,value_12,value_13,value_14,value_15,value_16,value_17);
+  // vTaskDelay(1000);
+
+  // mcu.tiny32_ModbusRTU_Status(id,value_11,value_12,value_13,value_14,value_15,value_16);
+  // vTaskDelay(1000);
+
+  // mcu.tiny32_ModbusRTU_Status(id,value_11,value_12,value_13,value_14,value_15);
+  // vTaskDelay(1000);
+
+  // mcu.tiny32_ModbusRTU_Status(id,value_11,value_12,value_13,value_14);
+  // vTaskDelay(1000);
+
+  // mcu.tiny32_ModbusRTU_Status(id,value_11,value_12,value_13);
+  // vTaskDelay(1000);
+
+  // mcu.tiny32_ModbusRTU_Status(id,value_11,value_12);
+  // vTaskDelay(1000);
+
+  // mcu.tiny32_ModbusRTU_Status(id,value_11);
+  // vTaskDelay(1000);
+
+  Serial.printf("Info: value_11 => %.0f\r\n", value_11);
+  Serial.printf("Info: value_12 => %.0f\r\n", value_12);
+  Serial.printf("Info: value_13 => %.0f\r\n", value_13);
+  Serial.printf("Info: value_14 => %.0f\r\n", value_14);
+  Serial.printf("Info: value_15 => %.0f\r\n", value_15);
+  Serial.printf("Info: value_16 => %.0f\r\n", value_16);
+  Serial.printf("Info: value_17 => %.0f\r\n", value_17);
+  Serial.printf("Info: value_18 => %.0f\r\n", value_18);
+  Serial.printf("Info: value_19 => %.0f\r\n", value_19);
+  Serial.printf("Info: value_20 => %.0f\r\n", value_20);
   Serial.printf("*****************************\r\n");
 }

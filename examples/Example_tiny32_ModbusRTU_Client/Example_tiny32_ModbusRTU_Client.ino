@@ -8,8 +8,8 @@
  * Rev1.0       :     Origital
  * Rev1.1       :     Set and Read ID of ModbusRTU client
  * website      :     http://www.tenergyinnovation.co.th
- * Email        :     admin@innovation.co.th
- * TEL          :     +66 82-308-3299
+ * Email        :     uten.boonliam@tenergyinnovation.co.th
+ * TEL          :     +66 89-140-7205
  ***********************************************************************/
 #include <Arduino.h>
 #include <tiny32_v3.h>
