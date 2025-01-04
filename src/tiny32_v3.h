@@ -3,7 +3,7 @@
  * Description  :     Class for Hardware config and function for tiny32_v3 module
  * Author       :     Tenergy Innovation Co., Ltd.
  * Date         :     23 Nov 2021
- * Revision     :     3.14.0
+ * Revision     :     3.17
  * Rev1.0       :     Original
  * Rev1.1       :     Add TimeStamp_minute
  *                    Add TimeStamp_24hr_minute
@@ -40,6 +40,7 @@
  * Rev3.14      :     Add Inverter ATESS ModbusRUT [28-04-2024]
  * Rev3.15      :     Add ModbusRTU relay module [17-12-2024]
  * Rev3.16      :     Add TF-Luna ToF LiDAR Module - 8 meters Distance Sensor [22-12-2024]
+ * Rev3.17      :     Additional function and example for tiny32 ModbusRTU [04-01-2025]
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@tenergyinnovation.co.th
  * TEL          :     089-140-7205
@@ -52,7 +53,7 @@
 class tiny32_v3
 {
 private:
-#define version_c "3.16"
+#define version_c "3.17"
 
 public:
 /**************************************/
@@ -83,7 +84,10 @@ public:
 
 private:
     uint8_t _resolution_bit;
-    uint16_t crc16_update(uint16_t crc, uint8_t a);
+    // uint16_t crc16_update(uint16_t crc, uint8_t a);
+    unsigned char *chpt;
+    // Register Address*
+    unsigned int data_register[256]; // ตัวแปรที่ใช้สำหรับเก็บ data เพื่อทำการสือสารไปยัง modbus protocol
 
     int dist;     /*----actual distance measurements of LiDAR---*/
     int strength; /*----signal strength of LiDAR----------------*/
@@ -103,6 +107,7 @@ public:
     uint16_t TimeStamp_minute_encode(uint16_t y, uint8_t m, uint8_t d, uint8_t h, uint8_t mi);
     uint16_t TimeStamp_24hr_encode(uint16_t h, uint16_t mi);
     void TimeStamp_hour_minute_decode(uint16_t timestemp, uint16_t &h, uint16_t &mi);
+    uint16_t crc16_update(uint16_t crc, uint8_t a);
 
 private:
     uint16_t ec_modbusRTU(uint8_t id);
@@ -179,6 +184,9 @@ public:
     bool tiny32_ModbusRTU(uint8_t id, float &val1, float &val2, float &val3);
     bool tiny32_ModbusRTU(uint8_t id, float &val1, float &val2);
     bool tiny32_ModbusRTU(uint8_t id, float &val1);
+    uint16_t register_read(unsigned int address);
+    void register_update(unsigned int address, float *para);
+    void register_update(unsigned int address, uint8_t *para);
 
     /* Enenergic ModbusRTU PowerMeter*/
     bool ENenergic_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);

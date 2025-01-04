@@ -11565,6 +11565,70 @@ int8_t tiny32_v3::tiny32_ModbusRTU_setAddress(uint8_t id, uint8_t new_id)
   }
 }
 
+
+/***********************************************************************
+ * FUNCTION:    register_update
+ * DESCRIPTION: Update data register
+ * PARAMETERS:  unsigned int address,float *para
+ * RETURNED:    nothing
+ ***********************************************************************/
+void tiny32_v3::register_update(unsigned int address, float *para)
+{
+  //      Serial.println("---------------------- register_update ----------------------------");
+  //      Serial.print("Address: 0x"); Serial.println(address,HEX);
+  //      Serial.print("Parameter: "); Serial.println(*para,2);
+
+  chpt = (unsigned char *)&*para;
+
+  data_register[address] = chpt[1] << 8;                             // Serial.println(data_register[address],HEX);
+  data_register[address] = data_register[address] ^ chpt[0];         // Serial.println(data_register[address],HEX);
+                                                                     // Serial.println(data_register[address+1],HEX);
+  data_register[address + 1] = chpt[3] << 8;                         // Serial.println(data_register[address+1],HEX);
+  data_register[address + 1] = data_register[address + 1] ^ chpt[2]; // Serial.println(data_register[address+1],HEX);
+}
+
+
+/***********************************************************************
+ * FUNCTION:    register_update
+ * DESCRIPTION: Update data register
+ * PARAMETERS:  unsigned int address,uint8_t *para
+ * RETURNED:    nothing
+ ***********************************************************************/
+void tiny32_v3::register_update(unsigned int address, uint8_t *para)
+{
+  //      Serial.println("---------------------- register_update ----------------------------");
+  //      Serial.print("Address: 0x"); Serial.println(address,HEX);
+  //      Serial.print("Parameter: "); Serial.println(*para,2);
+
+  chpt = (unsigned char *)&*para;
+
+  data_register[address] = chpt[1] << 8;                             // Serial.println(data_register[address],HEX);
+  data_register[address] = data_register[address] ^ chpt[0];         // Serial.println(data_register[address],HEX);
+                                                                     // Serial.println(data_register[address+1],HEX);
+  data_register[address + 1] = chpt[3] << 8;                         // Serial.println(data_register[address+1],HEX);
+  data_register[address + 1] = data_register[address + 1] ^ chpt[2]; // Serial.println(data_register[address+1],HEX);
+}
+
+/***********************************************************************
+ * FUNCTION:    register_read
+ * DESCRIPTION: read data register with 2 byte per time
+ * PARAMETERS:  unsigned int address
+ * RETURNED:    uint16_t
+ ***********************************************************************/
+uint16_t tiny32_v3::register_read(unsigned int address)
+{
+  uint16_t _data = 0x00;
+  _data = data_register[address];
+  return _data;
+}
+
+
+
+
+
+
+
+
 /***********************************************************************
  * FUNCTION:    ENenergic_begin
  * DESCRIPTION: set RX and TX pin
