@@ -11116,7 +11116,6 @@ bool tiny32_v3::tiny32_ModbusRTU(uint8_t id, float &val1)
   }
 }
 
-
 /***********************************************************************
  * FUNCTION:    tiny32_ModbusRTU_Status
  * DESCRIPTION: tiny32 read control status
@@ -11427,7 +11426,6 @@ bool tiny32_v3::tiny32_ModbusRTU_Status(uint8_t id, float &val1, float &val2, fl
   }
 }
 
-
 /***********************************************************************
  * FUNCTION:    tiny32_ModbusRTU_Status
  * DESCRIPTION: tiny32 read control status
@@ -11726,7 +11724,6 @@ bool tiny32_v3::tiny32_ModbusRTU_Status(uint8_t id, float &val1, float &val2, fl
     return 0;
   }
 }
-
 
 /***********************************************************************
  * FUNCTION:    tiny32_ModbusRTU_Status
@@ -13061,7 +13058,6 @@ bool tiny32_v3::tiny32_ModbusRTU_Status(uint8_t id, float &val1, float &val2, fl
   }
 }
 
-
 /***********************************************************************
  * FUNCTION:    tiny32_ModbusRTU_Status
  * DESCRIPTION: tiny32 read control status
@@ -13978,7 +13974,6 @@ int8_t tiny32_v3::tiny32_ModbusRTU_searchAddress(void)
   Serial.printf("\r\nInfo: Finish searching .... Can't find tiny32_MobusRTU_client for this bus [fail]");
 }
 
-
 /***********************************************************************
  * FUNCTION:    tiny32_ModbusRTU_searchAddress_v2
  * DESCRIPTION: Search Address from ModbusRTU Module [1-253]
@@ -14428,7 +14423,6 @@ int8_t tiny32_v3::tiny32_ModbusRTU_setAddress(uint8_t id, uint8_t new_id)
   }
 }
 
-
 /***********************************************************************
  * FUNCTION:    tiny32_ModbusRTU_setAddress_v2
  * DESCRIPTION: Set Address for tiny32_ModbusRTU Module [1-252]
@@ -14630,7 +14624,6 @@ int8_t tiny32_v3::tiny32_ModbusRTU_setAddress_v2(uint8_t id, uint8_t new_id)
   }
 }
 
-
 /***********************************************************************
  * FUNCTION:    tiny32_ModbusRTU_Control
  * DESCRIPTION: Control Device by function 06 write single register
@@ -14815,7 +14808,7 @@ bool tiny32_v3::tiny32_ModbusRTU_Control(uint8_t id, uint8_t address, uint8_t va
   if (_crc_r == _crc)
   {
 
-    Serial.printf("Info: Success to set value [%d]:%d\r\n",address, value);
+    Serial.printf("Info: Success to set value [%d]:%d\r\n", address, value);
     return true;
   }
   else
@@ -14823,7 +14816,6 @@ bool tiny32_v3::tiny32_ModbusRTU_Control(uint8_t id, uint8_t address, uint8_t va
     Serial.printf("Error: crc16\r\n");
     return false;
   }
-
 }
 /***********************************************************************
  * FUNCTION:    register_update
@@ -14845,7 +14837,6 @@ void tiny32_v3::register_update(unsigned int address, float *para)
   data_register[address + 1] = chpt[3] << 8;                         // Serial.println(data_register[address+1],HEX);
   data_register[address + 1] = data_register[address + 1] ^ chpt[2]; // Serial.println(data_register[address+1],HEX);
 }
-
 
 /***********************************************************************
  * FUNCTION:    register_update
@@ -14880,13 +14871,6 @@ uint16_t tiny32_v3::register_read(unsigned int address)
   _data = data_register[address];
   return _data;
 }
-
-
-
-
-
-
-
 
 /***********************************************************************
  * FUNCTION:    ENenergic_begin
@@ -37876,10 +37860,10 @@ bool tiny32_v3::BRC01_begin(uint8_t rx, uint8_t tx)
 /***********************************************************************
  * FUNCTION:    BRC01_getData
  * DESCRIPTION: get data from Bluetooth BLE Speed Sensor Module
- * PARAMETERS:  rx, tx
+ * PARAMETERS:  reference parameter speed, rmp, batt, mac, dir (direction true:forword, false:reverse)
  * RETURNED:    true/ false
  ***********************************************************************/
-bool tiny32_v3::BRC01_getData(float &speed, float &rpm, int &batt, char *mac)
+bool tiny32_v3::BRC01_getData(float &speed, float &rpm, int &batt, char *mac, bool &dir)
 {
 
   int _indexStart, _indexStop;
@@ -37944,15 +37928,27 @@ bool tiny32_v3::BRC01_getData(float &speed, float &rpm, int &batt, char *mac)
 
     sprintf(_hexString, "%c%c%c%c", _hexArray[0], _hexArray[1], _hexArray[2], _hexArray[3]);
     // Serial.printf("_hexString = %s\r\n", _hexString);
-    float _speed = (float)strtol(_hexString, NULL, 16) * 0.1;
+    uint16_t _strtol = strtol(_hexString, NULL, 16);
+    // Serial.printf("_strtol = 0x%X\r\n", _strtol);
 
-    if (_speed > 100)
+    /*
+      If data 0xSSSS less than 0x8000, it means Forward, speed=0xSSSS
+      If data 0xSSSS ≥ 0x8000, it means Reverse, speed=0x10000-0xSSSS
+    */
+
+    if (_strtol >= 0x8000)
     {
+      speed = (float)((0x10000 - _strtol) * 0.1);
+      dir = false;
     }
     else
     {
-      speed = _speed;
+      speed = (float)(_strtol * 0.1);
+      dir = true;
     }
+
+    Serial.printf("\tspeed(%d) = %.1fkm/h\r\n", dir, speed);
+
     // Serial.printf("\tspeed = %.1fkm/h\r\n", speed); // 9.9 km/h
 
     //---- claer buffer ----
@@ -37987,20 +37983,25 @@ bool tiny32_v3::BRC01_getData(float &speed, float &rpm, int &batt, char *mac)
 
     sprintf(_hexString, "%c%c%c%c", _hexArray[0], _hexArray[1], _hexArray[2], _hexArray[3]);
     // Serial.printf("_hexString = %s\r\n", _hexString);
-    float _rpm = (float)strtol(_hexString, NULL, 16) * 0.1;
+    _strtol = strtol(_hexString, NULL, 16);
 
-    // fix bug
-    if (_rpm > 100)
+    /*
+      If data 0xRRRR less than 0x8000, rpm=0xRRRR
+      If data 0xRRRR ≥0x8000, rpm=0x10000-0xRRRR
+    */
+
+    if (_strtol >= 0x8000)
     {
-      NULL;
+      rpm = (float)((0x10000 - _strtol) * 0.1);
     }
     else
     {
-      rpm = _rpm;
+      rpm = (float)(_strtol * 0.1);
     }
 
-    // Serial.printf("\trpm = %.1frpm\r\n", rpm); // 72.7rpm
+    // Serial.printf("\trpm(%d) = %.1frpm\r\n", dir, rpm); // 72.7rpm
     // Serial.println("----------------------");
+
 
     //---- claer buffer ----
     for (int i = 0; i < sizeof(_charArray); i++)
@@ -41070,7 +41071,7 @@ bool tiny32_v3::TFLiDAR_getData(int &_distance, int &_strength, float &_tempratu
         Serial.print("\t Chip Temprature = ");
         Serial.print(temprature);
         Serial.println(" celcius degree"); // output chip temperature of Lidar
-            _temprature = temprature;
+        _temprature = temprature;
         while (rs485_2.available())
         {
           rs485_2.read();
@@ -41087,7 +41088,6 @@ bool tiny32_v3::TFLiDAR_getData(int &_distance, int &_strength, float &_tempratu
     return false;
   }
 }
-
 
 /***********************************************************************
  * FUNCTION:    TFLiDAR_getData
@@ -41196,7 +41196,6 @@ bool tiny32_v3::TFLiDAR_getData(int &_distance, int &_strength)
   }
 }
 
-
 /***********************************************************************
  * FUNCTION:    TFLiDAR_getData
  * DESCRIPTION: get data from TF-Luna ToF LiDAR Module
@@ -41302,4 +41301,3 @@ bool tiny32_v3::TFLiDAR_getData(int &_distance)
     return false;
   }
 }
-

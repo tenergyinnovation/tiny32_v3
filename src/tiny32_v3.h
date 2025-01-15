@@ -3,7 +3,7 @@
  * Description  :     Class for Hardware config and function for tiny32_v3 module
  * Author       :     Tenergy Innovation Co., Ltd.
  * Date         :     23 Nov 2021
- * Revision     :     3.17
+ * Revision     :     3.17.2
  * Rev1.0       :     Original
  * Rev1.1       :     Add TimeStamp_minute
  *                    Add TimeStamp_24hr_minute
@@ -43,6 +43,8 @@
  * Rev3.17      :     Additional function and example for tiny32 ModbusRTU [04-01-2025]
  * Rev3.17.1    :     - Add Example for tiny32_ModbusRTU [04-01-2025]
  *                    - Add Function new tiny32_ModbusRTU 
+ * Rev3.17.2    :     Fix bug Bluetooth BLE Speed Sensor Module: BRC01 can read Forward and Reverse speed [14-01-2025]
+ *                    revise function BRC01_getData
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@tenergyinnovation.co.th
  * TEL          :     089-140-7205
@@ -55,7 +57,7 @@
 class tiny32_v3
 {
 private:
-#define version_c "3.17.1"
+#define version_c "3.17.2"
 
 public:
 
@@ -406,7 +408,7 @@ public:
 
     /* Bluetooth BLE Speed Sensor Module: BRC01-RS485, BRC01-RS232 [2024-12-08]  */
     bool BRC01_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
-    bool BRC01_getData(float &speed, float &rpm, int &batt, char *mac);
+    bool BRC01_getData(float &speed, float &rpm, int &batt, char *mac, bool &dir);
 
     /* Inverter ATESS ModbusRTU for Read parameter */
     bool ATESS_R717_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
