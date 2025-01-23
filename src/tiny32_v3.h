@@ -3,7 +3,7 @@
  * Description  :     Class for Hardware config and function for tiny32_v3 module
  * Author       :     Tenergy Innovation Co., Ltd.
  * Date         :     23 Nov 2021
- * Revision     :     3.17.2
+ * Revision     :     3.17.3
  * Rev1.0       :     Original
  * Rev1.1       :     Add TimeStamp_minute
  *                    Add TimeStamp_24hr_minute
@@ -45,6 +45,7 @@
  *                    - Add Function new tiny32_ModbusRTU 
  * Rev3.17.2    :     Fix bug Bluetooth BLE Speed Sensor Module: BRC01 can read Forward and Reverse speed [14-01-2025]
  *                    revise function BRC01_getData
+ * Rev3.17.3    :     Fix bug delay time for function tiny32_ModbusRTU_Control [Line: 14690] [23-01-2025]   
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@tenergyinnovation.co.th
  * TEL          :     089-140-7205
@@ -57,7 +58,7 @@
 class tiny32_v3
 {
 private:
-#define version_c "3.17.2"
+#define version_c "3.17.3"
 
 public:
 

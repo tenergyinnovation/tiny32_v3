@@ -14686,7 +14686,8 @@ bool tiny32_v3::tiny32_ModbusRTU_Control(uint8_t id, uint8_t address, uint8_t va
   for (int _i = 0; _i < 8; _i++)
     rs485.write(_data_write[_i]);
 
-  vTaskDelay(300);
+  // vTaskDelay(300);
+   vTaskDelay(1000);
 
   /**** Read data ****/
   if (rs485.available())
