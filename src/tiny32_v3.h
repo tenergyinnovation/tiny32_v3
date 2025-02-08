@@ -3,7 +3,7 @@
  * Description  :     Class for Hardware config and function for tiny32_v3 module
  * Author       :     Tenergy Innovation Co., Ltd.
  * Date         :     23 Nov 2021
- * Revision     :     3.17.3
+ * Revision     :     3.17.5
  * Rev1.0       :     Original
  * Rev1.1       :     Add TimeStamp_minute
  *                    Add TimeStamp_24hr_minute
@@ -46,6 +46,8 @@
  * Rev3.17.2    :     Fix bug Bluetooth BLE Speed Sensor Module: BRC01 can read Forward and Reverse speed [14-01-2025]
  *                    revise function BRC01_getData
  * Rev3.17.3    :     Fix bug delay time for function tiny32_ModbusRTU_Control [Line: 14690] [23-01-2025]   
+ * Rev3.17.4    :     Add function  ATESS_Energy_PVTotal(uint8_t id); [06-02-2025]
+ * Rev3.17.5    :     Fix bug function  ATESS_Energy_PVTotal(uint8_t id) by change  "int16_t _temp_hex_16bit" to " uint16_t _temp_hex_16bit" [08-02-2025]
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@tenergyinnovation.co.th
  * TEL          :     089-140-7205
@@ -58,7 +60,7 @@
 class tiny32_v3
 {
 private:
-#define version_c "3.17.3"
+#define version_c "3.17.4"
 
 public:
 
@@ -424,6 +426,7 @@ public:
     float ATESS_Energy_GridOutToday_kWh(uint8_t id);
     float ATESS_Energy_GridInToday_kWh(uint8_t id);
     float ATESS_Energy_LoadToday_kWh(uint8_t id);
+    float ATESS_Energy_PVTotal_kWh(uint8_t id);
 
     /* ModbusRTU Relay Module */
     bool RelayModusRTU_begin(uint8_t rx = RXD2, uint8_t tx = TXD2);
