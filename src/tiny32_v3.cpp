@@ -40396,7 +40396,7 @@ float tiny32_v3::ATESS_Energy_LoadToday_kWh(uint8_t id)
  ***********************************************************************/
 float tiny32_v3::ATESS_Energy_PVTotal_kWh(uint8_t id)
 {
-  #define modbusRTU_Debug
+#define modbusRTU_Debug
 
   uint16_t _crc = 0xffff;
   uint16_t _crc_r = 0xffff;
@@ -40406,7 +40406,7 @@ float tiny32_v3::ATESS_Energy_PVTotal_kWh(uint8_t id)
   uint8_t _data_write[8];
   uint8_t _data_read[20];
   uint8_t _byte_cnt = 0;
-  uint8_t _data_check[9]; //revise from 7 to 9
+  uint8_t _data_check[9]; // revise from 7 to 9
 
   _data_write[0] = id;
   _data_write[1] = 0x04;
@@ -40582,23 +40582,18 @@ float tiny32_v3::ATESS_Energy_PVTotal_kWh(uint8_t id)
     _temp_hex_32bit = 0x00000000; // clear buffer
     _temp_hex_16bit = 0x00000000; // clear buffer
 
+    _temp_hex_16bit = _data_check[3];                   // Serial.printf("Debug: _temp_hex_16bit = 0x%X\r\n",_temp_hex_16bit);
+    _temp_hex_16bit = _temp_hex_16bit << 8;             // Serial.printf("Debug: _temp_hex_16bit = 0x%X\r\n",_temp_hex_16bit);
+    _temp_hex_16bit = _temp_hex_16bit | _data_check[4]; // Serial.printf("Debug: _temp_hex_16bit = 0x%X(%d)\r\n",_temp_hex_16bit,_temp_hex_16bit);
 
-  
+    _temp_hex_32bit = _temp_hex_32bit | _temp_hex_16bit; // Serial.printf("Debug: _temp_hex_32bit = 0x%X(%d)\r\n",_temp_hex_32bit,_temp_hex_32bit);
+    _temp_hex_32bit = _temp_hex_32bit << 16;             // Serial.printf("Debug: _temp_hex_32bit = 0x%X(%d)\r\n",_temp_hex_32bit,_temp_hex_32bit);
 
-    _temp_hex_16bit = _data_check[3];                    //Serial.printf("Debug: _temp_hex_16bit = 0x%X\r\n",_temp_hex_16bit);
-    _temp_hex_16bit = _temp_hex_16bit << 8;              //Serial.printf("Debug: _temp_hex_16bit = 0x%X\r\n",_temp_hex_16bit);
-    _temp_hex_16bit = _temp_hex_16bit | _data_check[4];  //Serial.printf("Debug: _temp_hex_16bit = 0x%X(%d)\r\n",_temp_hex_16bit,_temp_hex_16bit);
+    _temp_hex_16bit = _data_check[5];                   // Serial.printf("Debug: _temp_hex_16bit = 0x%X\r\n",_temp_hex_16bit);
+    _temp_hex_16bit = _temp_hex_16bit << 8;             // Serial.printf("Debug: _temp_hex_16bit = 0x%X\r\n",_temp_hex_16bit);
+    _temp_hex_16bit = _temp_hex_16bit | _data_check[6]; // Serial.printf("Debug: _temp_hex_16bit = 0x%X(%d)\r\n",_temp_hex_16bit,_temp_hex_16bit);
 
-    _temp_hex_32bit = _temp_hex_32bit | _temp_hex_16bit;  //Serial.printf("Debug: _temp_hex_32bit = 0x%X(%d)\r\n",_temp_hex_32bit,_temp_hex_32bit);
-    _temp_hex_32bit = _temp_hex_32bit << 16;              //Serial.printf("Debug: _temp_hex_32bit = 0x%X(%d)\r\n",_temp_hex_32bit,_temp_hex_32bit);
-
-
-    _temp_hex_16bit = _data_check[5];                    //Serial.printf("Debug: _temp_hex_16bit = 0x%X\r\n",_temp_hex_16bit);
-    _temp_hex_16bit = _temp_hex_16bit << 8;              //Serial.printf("Debug: _temp_hex_16bit = 0x%X\r\n",_temp_hex_16bit);
-    _temp_hex_16bit = _temp_hex_16bit | _data_check[6];  //Serial.printf("Debug: _temp_hex_16bit = 0x%X(%d)\r\n",_temp_hex_16bit,_temp_hex_16bit);
-
-
-    _temp_hex_32bit = _temp_hex_32bit | _temp_hex_16bit;  //Serial.printf("Debug: _temp_hex_32bit* = 0x%X(%d)\r\n",_temp_hex_32bit,_temp_hex_32bit);
+    _temp_hex_32bit = _temp_hex_32bit | _temp_hex_16bit; // Serial.printf("Debug: _temp_hex_32bit* = 0x%X(%d)\r\n",_temp_hex_32bit,_temp_hex_32bit);
     _temperature = (float)_temp_hex_32bit / 10;
 
 #ifdef modbusRTU_Debug
@@ -40614,7 +40609,6 @@ float tiny32_v3::ATESS_Energy_PVTotal_kWh(uint8_t id)
     return -1;
   }
 }
-
 
 /***********************************************************************
  * FUNCTION:    RelayModusRTU_begin
@@ -40995,12 +40989,13 @@ bool tiny32_v3::TFLiDAR_begin(uint8_t rx, uint8_t tx)
 {
   if (((tx == TXD2) || (tx == TXD3)) && ((rx == RXD2) || (rx == RXD3)))
   {
-    rs485_2.begin(115200, rx, tx);
+    rs485_2.begin(115200, SERIAL_8N1, rx, tx);
+    Serial.printf("TFLiDAR initialized: RX=%d, TX=%d\r\n", rx, tx);
     return 1;
   }
   else
   {
-    Serial.printf("Error: Fail to define RS485 port!!\r\n");
+    Serial.printf("Error: Fail to define RS485 port!! RX=%d, TX=%d\r\n", rx, tx);
     return 0;
   }
 }
@@ -41009,12 +41004,13 @@ bool tiny32_v3::TFLiDAR_begin(uint8_t rx, uint8_t tx)
  * FUNCTION:    TFLiDAR_getData
  * DESCRIPTION: get data from TF-Luna ToF LiDAR Module
  * PARAMETERS:  nothing
- * RETURNED:    dist
+ * RETURNED:    dist cm (distance in centimeters)
  ***********************************************************************/
 int tiny32_v3::TFLiDAR_getData()
 {
   if (rs485_2.available()) // check if serial port has data input
   {
+    float dist_meters = 0.0; // distance in meters
     if (rec_debug_state == 0x01)
     { // the first byte
       uart[0] = rs485_2.read();
@@ -41079,330 +41075,18 @@ int tiny32_v3::TFLiDAR_getData()
       uart[8] = rs485_2.read();
       if (uart[8] == check)
       {
-
-        dist = uart[2] + uart[3] * 256;       // the distance
+        dist = uart[2] + uart[3] * 256;       // the distance in cm
         strength = uart[4] + uart[5] * 256;   // the strength
         temprature = uart[6] + uart[7] * 256; // calculate chip temprature
         temprature = temprature / 8 - 256;
-        Serial.print("dist = ");
-        Serial.print(dist); // output measure distance value of LiDAR
-        Serial.print('\n');
-        Serial.print("strength = ");
-        Serial.print(strength); // output signal strength value
-        Serial.print('\n');
-        Serial.print("\t Chip Temprature = ");
-        Serial.print(temprature);
-        Serial.println(" celcius degree"); // output chip temperature of Lidar
-        while (rs485_2.available())
-        {
-          rs485_2.read();
-        } // This part is added becuase some previous packets are there in the buffer so to clear serial buffer and get fresh data.
-        delay(100);
-      }
-      rec_debug_state = 0x01;
-    }
-  }
 
-  return dist;
-}
-
-/***********************************************************************
- * FUNCTION:    TFLiDAR_getData
- * DESCRIPTION: get data from TF-Luna ToF LiDAR Module
- * PARAMETERS:  strength, temprature
- * RETURNED:    dist
- ***********************************************************************/
-int tiny32_v3::TFLiDAR_getData(int &_strength, float &_temprature)
-{
-  if (rs485_2.available()) // check if serial port has data input
-  {
-    if (rec_debug_state == 0x01)
-    { // the first byte
-      uart[0] = rs485_2.read();
-      if (uart[0] == 0x59)
-      {
-        check = uart[0];
-        rec_debug_state = 0x02;
-      }
-    }
-    else if (rec_debug_state == 0x02)
-    { // the second byte
-      uart[1] = rs485_2.read();
-      if (uart[1] == 0x59)
-      {
-        check += uart[1];
-        rec_debug_state = 0x03;
-      }
-      else
-      {
-        rec_debug_state = 0x01;
-      }
-    }
-
-    else if (rec_debug_state == 0x03)
-    {
-      uart[2] = rs485_2.read();
-      check += uart[2];
-      rec_debug_state = 0x04;
-    }
-    else if (rec_debug_state == 0x04)
-    {
-      uart[3] = rs485_2.read();
-      check += uart[3];
-      rec_debug_state = 0x05;
-    }
-    else if (rec_debug_state == 0x05)
-    {
-      uart[4] = rs485_2.read();
-      check += uart[4];
-      rec_debug_state = 0x06;
-    }
-    else if (rec_debug_state == 0x06)
-    {
-      uart[5] = rs485_2.read();
-      check += uart[5];
-      rec_debug_state = 0x07;
-    }
-    else if (rec_debug_state == 0x07)
-    {
-      uart[6] = rs485_2.read();
-      check += uart[6];
-      rec_debug_state = 0x08;
-    }
-    else if (rec_debug_state == 0x08)
-    {
-      uart[7] = rs485_2.read();
-      check += uart[7];
-      rec_debug_state = 0x09;
-    }
-    else if (rec_debug_state == 0x09)
-    {
-      uart[8] = rs485_2.read();
-      if (uart[8] == check)
-      {
-
-        dist = uart[2] + uart[3] * 256;       // the distance
-        strength = uart[4] + uart[5] * 256;   // the strength
-        temprature = uart[6] + uart[7] * 256; // calculate chip temprature
-        temprature = temprature / 8 - 256;
-        Serial.print("dist = ");
-        Serial.print(dist); // output measure distance value of LiDAR
-        Serial.print('\n');
-        Serial.print("strength = ");
-        Serial.print(strength); // output signal strength value
-        _strength = strength;
-        Serial.print('\n');
-        Serial.print("\t Chip Temprature = ");
-        Serial.print(temprature);
-        _temprature = temprature;
-        Serial.println(" celcius degree"); // output chip temperature of Lidar
-        while (rs485_2.available())
-        {
-          rs485_2.read();
-        } // This part is added becuase some previous packets are there in the buffer so to clear serial buffer and get fresh data.
-        delay(100);
-      }
-      rec_debug_state = 0x01;
-    }
-  }
-
-  return dist;
-}
-
-/***********************************************************************
- * FUNCTION:    TFLiDAR_getData
- * DESCRIPTION: get data from TF-Luna ToF LiDAR Module
- * PARAMETERS:  int &_distance, int &_strength, float &_temprature
- * RETURNED:    true/false
- ***********************************************************************/
-bool tiny32_v3::TFLiDAR_getData(int &_distance, int &_strength, float &_temprature)
-{
-  if (rs485_2.available()) // check if serial port has data input
-  {
-    if (rec_debug_state == 0x01)
-    { // the first byte
-      uart[0] = rs485_2.read();
-      if (uart[0] == 0x59)
-      {
-        check = uart[0];
-        rec_debug_state = 0x02;
-      }
-    }
-    else if (rec_debug_state == 0x02)
-    { // the second byte
-      uart[1] = rs485_2.read();
-      if (uart[1] == 0x59)
-      {
-        check += uart[1];
-        rec_debug_state = 0x03;
-      }
-      else
-      {
-        rec_debug_state = 0x01;
-      }
-    }
-
-    else if (rec_debug_state == 0x03)
-    {
-      uart[2] = rs485_2.read();
-      check += uart[2];
-      rec_debug_state = 0x04;
-    }
-    else if (rec_debug_state == 0x04)
-    {
-      uart[3] = rs485_2.read();
-      check += uart[3];
-      rec_debug_state = 0x05;
-    }
-    else if (rec_debug_state == 0x05)
-    {
-      uart[4] = rs485_2.read();
-      check += uart[4];
-      rec_debug_state = 0x06;
-    }
-    else if (rec_debug_state == 0x06)
-    {
-      uart[5] = rs485_2.read();
-      check += uart[5];
-      rec_debug_state = 0x07;
-    }
-    else if (rec_debug_state == 0x07)
-    {
-      uart[6] = rs485_2.read();
-      check += uart[6];
-      rec_debug_state = 0x08;
-    }
-    else if (rec_debug_state == 0x08)
-    {
-      uart[7] = rs485_2.read();
-      check += uart[7];
-      rec_debug_state = 0x09;
-    }
-    else if (rec_debug_state == 0x09)
-    {
-      uart[8] = rs485_2.read();
-      if (uart[8] == check)
-      {
-
-        dist = uart[2] + uart[3] * 256;       // the distance
-        strength = uart[4] + uart[5] * 256;   // the strength
-        temprature = uart[6] + uart[7] * 256; // calculate chip temprature
-        temprature = temprature / 8 - 256;
-        Serial.print("dist = ");
-        Serial.print(dist); // output measure distance value of LiDAR
-        _distance = dist;
-        Serial.print('\n');
-        Serial.print("strength = ");
-        Serial.print(strength); // output signal strength value
-        _strength = strength;
-        Serial.print('\n');
-        Serial.print("\t Chip Temprature = ");
-        Serial.print(temprature);
-        Serial.println(" celcius degree"); // output chip temperature of Lidar
-        _temprature = temprature;
-        while (rs485_2.available())
-        {
-          rs485_2.read();
-        } // This part is added becuase some previous packets are there in the buffer so to clear serial buffer and get fresh data.
-        delay(100);
-      }
-      rec_debug_state = 0x01;
-    }
-
-    return true;
-  }
-  else
-  {
-    return false;
-  }
-}
-
-/***********************************************************************
- * FUNCTION:    TFLiDAR_getData
- * DESCRIPTION: get data from TF-Luna ToF LiDAR Module
- * PARAMETERS:  int &_distance, int &_strength
- * RETURNED:    true/false
- ***********************************************************************/
-bool tiny32_v3::TFLiDAR_getData(int &_distance, int &_strength)
-{
-  if (rs485_2.available()) // check if serial port has data input
-  {
-    if (rec_debug_state == 0x01)
-    { // the first byte
-      uart[0] = rs485_2.read();
-      if (uart[0] == 0x59)
-      {
-        check = uart[0];
-        rec_debug_state = 0x02;
-      }
-    }
-    else if (rec_debug_state == 0x02)
-    { // the second byte
-      uart[1] = rs485_2.read();
-      if (uart[1] == 0x59)
-      {
-        check += uart[1];
-        rec_debug_state = 0x03;
-      }
-      else
-      {
-        rec_debug_state = 0x01;
-      }
-    }
-
-    else if (rec_debug_state == 0x03)
-    {
-      uart[2] = rs485_2.read();
-      check += uart[2];
-      rec_debug_state = 0x04;
-    }
-    else if (rec_debug_state == 0x04)
-    {
-      uart[3] = rs485_2.read();
-      check += uart[3];
-      rec_debug_state = 0x05;
-    }
-    else if (rec_debug_state == 0x05)
-    {
-      uart[4] = rs485_2.read();
-      check += uart[4];
-      rec_debug_state = 0x06;
-    }
-    else if (rec_debug_state == 0x06)
-    {
-      uart[5] = rs485_2.read();
-      check += uart[5];
-      rec_debug_state = 0x07;
-    }
-    else if (rec_debug_state == 0x07)
-    {
-      uart[6] = rs485_2.read();
-      check += uart[6];
-      rec_debug_state = 0x08;
-    }
-    else if (rec_debug_state == 0x08)
-    {
-      uart[7] = rs485_2.read();
-      check += uart[7];
-      rec_debug_state = 0x09;
-    }
-    else if (rec_debug_state == 0x09)
-    {
-      uart[8] = rs485_2.read();
-      if (uart[8] == check)
-      {
-
-        dist = uart[2] + uart[3] * 256;       // the distance
-        strength = uart[4] + uart[5] * 256;   // the strength
-        temprature = uart[6] + uart[7] * 256; // calculate chip temprature
-        temprature = temprature / 8 - 256;
+        // Convert distance from cm to meters with 1 decimal place
+        dist_meters = dist / 100.0;
         // Serial.print("dist = ");
-        // Serial.print(dist); // output measure distance value of LiDAR
-        _distance = dist;
-        // Serial.print('\n');
+        // Serial.print(dist_meters, 1); // output distance in meters with 1 decimal place
+        // Serial.print(" m\n");
         // Serial.print("strength = ");
         // Serial.print(strength); // output signal strength value
-        _strength = strength;
         // Serial.print('\n');
         // Serial.print("\t Chip Temprature = ");
         // Serial.print(temprature);
@@ -41411,121 +41095,12 @@ bool tiny32_v3::TFLiDAR_getData(int &_distance, int &_strength)
         {
           rs485_2.read();
         } // This part is added becuase some previous packets are there in the buffer so to clear serial buffer and get fresh data.
-        delay(100);
+        delay(100); // wait for next data packet
       }
       rec_debug_state = 0x01;
+      return dist; // return distance in meters
     }
-
-    return true;
   }
-  else
-  {
-    return false;
-  }
+  return -1; // return -1 if no data available
 }
 
-/***********************************************************************
- * FUNCTION:    TFLiDAR_getData
- * DESCRIPTION: get data from TF-Luna ToF LiDAR Module
- * PARAMETERS:  int &_distance
- * RETURNED:    true/false
- ***********************************************************************/
-bool tiny32_v3::TFLiDAR_getData(int &_distance)
-{
-  if (rs485_2.available()) // check if serial port has data input
-  {
-    if (rec_debug_state == 0x01)
-    { // the first byte
-      uart[0] = rs485_2.read();
-      if (uart[0] == 0x59)
-      {
-        check = uart[0];
-        rec_debug_state = 0x02;
-      }
-    }
-    else if (rec_debug_state == 0x02)
-    { // the second byte
-      uart[1] = rs485_2.read();
-      if (uart[1] == 0x59)
-      {
-        check += uart[1];
-        rec_debug_state = 0x03;
-      }
-      else
-      {
-        rec_debug_state = 0x01;
-      }
-    }
-
-    else if (rec_debug_state == 0x03)
-    {
-      uart[2] = rs485_2.read();
-      check += uart[2];
-      rec_debug_state = 0x04;
-    }
-    else if (rec_debug_state == 0x04)
-    {
-      uart[3] = rs485_2.read();
-      check += uart[3];
-      rec_debug_state = 0x05;
-    }
-    else if (rec_debug_state == 0x05)
-    {
-      uart[4] = rs485_2.read();
-      check += uart[4];
-      rec_debug_state = 0x06;
-    }
-    else if (rec_debug_state == 0x06)
-    {
-      uart[5] = rs485_2.read();
-      check += uart[5];
-      rec_debug_state = 0x07;
-    }
-    else if (rec_debug_state == 0x07)
-    {
-      uart[6] = rs485_2.read();
-      check += uart[6];
-      rec_debug_state = 0x08;
-    }
-    else if (rec_debug_state == 0x08)
-    {
-      uart[7] = rs485_2.read();
-      check += uart[7];
-      rec_debug_state = 0x09;
-    }
-    else if (rec_debug_state == 0x09)
-    {
-      uart[8] = rs485_2.read();
-      if (uart[8] == check)
-      {
-
-        dist = uart[2] + uart[3] * 256;       // the distance
-        strength = uart[4] + uart[5] * 256;   // the strength
-        temprature = uart[6] + uart[7] * 256; // calculate chip temprature
-        temprature = temprature / 8 - 256;
-        Serial.print("dist = ");
-        Serial.print(dist); // output measure distance value of LiDAR
-        _distance = dist;
-        Serial.print('\n');
-        Serial.print("strength = ");
-        Serial.print(strength); // output signal strength value
-        Serial.print('\n');
-        Serial.print("\t Chip Temprature = ");
-        Serial.print(temprature);
-        Serial.println(" celcius degree"); // output chip temperature of Lidar
-        while (rs485_2.available())
-        {
-          rs485_2.read();
-        } // This part is added becuase some previous packets are there in the buffer so to clear serial buffer and get fresh data.
-        delay(100);
-      }
-      rec_debug_state = 0x01;
-    }
-
-    return true;
-  }
-  else
-  {
-    return false;
-  }
-}

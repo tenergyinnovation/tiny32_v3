@@ -3,7 +3,7 @@
  * Description  :     Class for Hardware config and function for tiny32_v3 module
  * Author       :     Tenergy Innovation Co., Ltd.
  * Date         :     23 Nov 2021
- * Revision     :     3.17.5
+ * Revision     :     3.17.6
  * Rev1.0       :     Original
  * Rev1.1       :     Add TimeStamp_minute
  *                    Add TimeStamp_24hr_minute
@@ -48,6 +48,7 @@
  * Rev3.17.3    :     Fix bug delay time for function tiny32_ModbusRTU_Control [Line: 14690] [23-01-2025]   
  * Rev3.17.4    :     Add function  ATESS_Energy_PVTotal(uint8_t id); [06-02-2025]
  * Rev3.17.5    :     Fix bug function  ATESS_Energy_PVTotal(uint8_t id) by change  "int16_t _temp_hex_16bit" to " uint16_t _temp_hex_16bit" [08-02-2025]
+ * Rev3.17.6    :     Fix bug function TF_Luna_ToF_LiDAR_Module();
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@tenergyinnovation.co.th
  * TEL          :     089-140-7205
@@ -60,7 +61,7 @@
 class tiny32_v3
 {
 private:
-#define version_c "3.17.4"
+#define version_c "3.17.6"
 
 public:
 
@@ -436,9 +437,5 @@ public:
     /* TF-Luna ToF LiDAR Module - 8 meters Distance Sensor */
     bool TFLiDAR_begin(uint8_t rx = RXD3, uint8_t tx = TXD3);
     int TFLiDAR_getData();
-    int TFLiDAR_getData(int &strength, float &temprature);
-    bool TFLiDAR_getData(int &distance);
-    bool TFLiDAR_getData(int &distance, int &strength);
-    bool TFLiDAR_getData(int &distance, int &strength, float &temprature);
 };
 #endif
