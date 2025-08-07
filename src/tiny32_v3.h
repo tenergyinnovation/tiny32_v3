@@ -3,7 +3,7 @@
  * Description  :     Class for Hardware config and function for tiny32_v3 module
  * Author       :     Tenergy Innovation Co., Ltd.
  * Date         :     23 Nov 2021
- * Revision     :     3.17.6
+ * Revision     :     3.18
  * Rev1.0       :     Original
  * Rev1.1       :     Add TimeStamp_minute
  *                    Add TimeStamp_24hr_minute
@@ -49,6 +49,8 @@
  * Rev3.17.4    :     Add function  ATESS_Energy_PVTotal(uint8_t id); [06-02-2025]
  * Rev3.17.5    :     Fix bug function  ATESS_Energy_PVTotal(uint8_t id) by change  "int16_t _temp_hex_16bit" to " uint16_t _temp_hex_16bit" [08-02-2025]
  * Rev3.17.6    :     Fix bug function TF_Luna_ToF_LiDAR_Module();
+ * Rev3.18      :     Add Debounce library for switch and button [17-08-2025]
+ *                    must to clone Debounce library to tiny32_v3/src/Debounce
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@tenergyinnovation.co.th
  * TEL          :     089-140-7205
@@ -57,11 +59,12 @@
 #ifndef TINY32_H
 #define TINY32_H
 #include "Ticker.h"
+#include "Debounce/Debounce.h". //https://github.com/wkoch/Debounce.git
 
 class tiny32_v3
 {
 private:
-#define version_c "3.17.6"
+#define version_c "3.18"
 
 public:
 
@@ -119,6 +122,7 @@ public:
 #define BUZZER 13
 
     tiny32_v3(/* args */);
+    ~tiny32_v3(); // Destructor
     void Relay(bool state);
     void RedLED(bool state);
     void BlueLED(bool state);
@@ -127,6 +131,11 @@ public:
     bool Sw1(void);
     bool Sw2(void);
     bool Slid_sw(void);
+    // เพิ่มฟังก์ชันสำหรับ Debounce features
+    unsigned int Sw1_count(void);     // นับจำนวนครั้งที่กด SW1
+    unsigned int Sw2_count(void);     // นับจำนวนครั้งที่กด SW2
+    void Sw1_resetCount(void);        // รีเซ็ตตัวนับ SW1
+    void Sw2_resetCount(void);        // รีเซ็ตตัวนับ SW2
     void library_version(void);
 
 private:
@@ -135,6 +144,14 @@ private:
     unsigned char *chpt;
     // Register Address*
     unsigned int data_register[256]; // ตัวแปรที่ใช้สำหรับเก็บ data เพื่อทำการสือสารไปยัง modbus protocol
+    
+    // Debounce objects for switches
+    Debounce *_sw1_debounce;
+    Debounce *_sw2_debounce;
+    
+    // Previous count for edge detection
+    unsigned int _sw1_prev_count;
+    unsigned int _sw2_prev_count;
 
     int dist;     /*----actual distance measurements of LiDAR---*/
     int strength; /*----signal strength of LiDAR----------------*/
