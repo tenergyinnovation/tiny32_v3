@@ -12,7 +12,6 @@
 #include "Arduino.h"
 #include "Ticker.h"
 #include "tiny32_v3_Lib.h"
-#include "Debounce/Debounce.h" //https://github.com/wkoch/Debounce.git
 
 Ticker tickerRedLED;
 Ticker tickerBlueLED;
@@ -37,33 +36,6 @@ tiny32_v3::tiny32_v3()
   digitalWrite(LED_IO12, LOW);
   digitalWrite(LED_IO4, LOW);
   digitalWrite(BUZZER, LOW);
-  
-  // Initialize Debounce objects
-  _sw1_debounce = new Debounce(SW1, 100, true);  // 100ms debounce, pullup enabled
-  _sw2_debounce = new Debounce(SW2, 100, true);  // 100ms debounce, pullup enabled
-  
-  // Initialize previous counts
-  _sw1_prev_count = 0;
-  _sw2_prev_count = 0;
-}
-
-/***********************************************************************
- * FUNCTION:    ~tiny32_v3 (Destructor)
- * DESCRIPTION: Cleanup memory for Debounce objects
- * PARAMETERS:  nothing
- * RETURNED:    nothing
- ***********************************************************************/
-tiny32_v3::~tiny32_v3()
-{
-  // ทำการ cleanup memory
-  if (_sw1_debounce) {
-    delete _sw1_debounce;
-    _sw1_debounce = nullptr;
-  }
-  if (_sw2_debounce) {
-    delete _sw2_debounce;
-    _sw2_debounce = nullptr;
-  }
 }
 
 /***********************************************************************
@@ -159,36 +131,26 @@ void tiny32_v3::buzzer_beep(int times)
 
 /***********************************************************************
  * FUNCTION:    Sw1
- * DESCRIPTION: Read SW1[pin34] with debounce
+ * DESCRIPTION: Read SW1[pin33]
  * PARAMETERS:  nothing
  * RETURNED:    0 or 1
  ***********************************************************************/
 bool tiny32_v3::Sw1(void)
 {
-  // ตรวจสอบว่ามีการกดปุ่มใหม่หรือไม่โดยเปรียบเทียบ count
-  unsigned int current_count = _sw1_debounce->count();
-  if (current_count > _sw1_prev_count) {
-    _sw1_prev_count = current_count;
-    return true;  // มีการกดใหม่
-  }
-  return false;   // ไม่มีการกดใหม่
+  bool _status = !digitalRead(SW1);
+  return _status;
 }
 
 /***********************************************************************
  * FUNCTION:    Sw2
- * DESCRIPTION: Read SW2[pin35] with debounce
+ * DESCRIPTION: Read SW2[pin14]
  * PARAMETERS:  nothing
  * RETURNED:    0 or 1
  ***********************************************************************/
 bool tiny32_v3::Sw2(void)
 {
-  // ตรวจสอบว่ามีการกดปุ่มใหม่หรือไม่โดยเปรียบเทียบ count
-  unsigned int current_count = _sw2_debounce->count();
-  if (current_count > _sw2_prev_count) {
-    _sw2_prev_count = current_count;
-    return true;  // มีการกดใหม่
-  }
-  return false;   // ไม่มีการกดใหม่
+  bool _status = !digitalRead(SW2);
+  return _status;
 }
 
 /***********************************************************************
@@ -201,50 +163,6 @@ bool tiny32_v3::Slid_sw(void)
 {
   bool _status = !digitalRead(SLID_SW);
   return _status;
-}
-
-/***********************************************************************
- * FUNCTION:    Sw1_count
- * DESCRIPTION: Get SW1 button press count with debounce
- * PARAMETERS:  nothing
- * RETURNED:    unsigned int count
- ***********************************************************************/
-unsigned int tiny32_v3::Sw1_count(void)
-{
-  return _sw1_debounce->count();
-}
-
-/***********************************************************************
- * FUNCTION:    Sw2_count
- * DESCRIPTION: Get SW2 button press count with debounce
- * PARAMETERS:  nothing
- * RETURNED:    unsigned int count
- ***********************************************************************/
-unsigned int tiny32_v3::Sw2_count(void)
-{
-  return _sw2_debounce->count();
-}
-
-/***********************************************************************
- * FUNCTION:    Sw1_resetCount
- * DESCRIPTION: Reset SW1 button press count
- * PARAMETERS:  nothing
- * RETURNED:    nothing
- ***********************************************************************/
-void tiny32_v3::Sw1_resetCount(void)
-{
-  _sw1_debounce->resetCount();
-}
-
-/***********************************************************************
- * FUNCTION:    Sw2_resetCount
- * DESCRIPTION: Reset SW2 button press count
- * PARAMETERS:  nothing
- * RETURNED:    nothing
- ***********************************************************************/
-void tiny32_v3::Sw2_resetCount(void)
-{
-  _sw2_debounce->resetCount();
 }
 
 /***********************************************************************
