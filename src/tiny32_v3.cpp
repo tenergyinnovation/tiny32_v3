@@ -41008,6 +41008,7 @@ bool tiny32_v3::TFLiDAR_begin(uint8_t rx, uint8_t tx)
  ***********************************************************************/
 int tiny32_v3::TFLiDAR_getData()
 {
+  static uint8_t _error_count = 0;
   if (rs485_2.available()) // check if serial port has data input
   {
     float dist_meters = 0.0; // distance in meters
@@ -41098,9 +41099,20 @@ int tiny32_v3::TFLiDAR_getData()
         delay(100); // wait for next data packet
       }
       rec_debug_state = 0x01;
+      _error_count = 0; // reset error count
       return dist; // return distance in meters
     }
   }
-  return -1; // return -1 if no data available
+
+  _error_count++;
+  if (_error_count > 100)
+  {
+    _error_count = 0;
+    return TFLiDAR_ERROR_DISCONNECT;
+  }
+  else{
+    return TFLiDAR_ERROR_NONE; // return -2 if no data available
+  }
+  return TFLiDAR_ERROR_NONE;
 }
 

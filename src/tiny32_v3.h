@@ -52,6 +52,7 @@
  * Rev3.18      :     Add Debounce library for switch and button [17-08-2025]
  *                    must to clone Debounce library to tiny32_v3/src/Debounce
  * Rev3.18.1    :     Fix bug Error compilation for Debounce library by rolling back to Rev3.17.6 [26-10-2025]
+ * Rev3.18.2    :     Improve Function TFLiDAR_getData, can respose error data, disconnect sensor [26-10-2025 20:30]
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@tenergyinnovation.co.th
  * TEL          :     089-140-7205
@@ -64,7 +65,7 @@
 class tiny32_v3
 {
 private:
-#define version_c "3.18.1"
+#define version_c "3.18.2"
 
 public:
 
@@ -106,6 +107,10 @@ public:
 #define modbus_30_addr 0x3A // 29 ตำแหน่ง Address ค่าที่ต้องการควบคุมตัวที่ 10 Address=58
 
 #define id_addr 0x40 // ตำแหน่ง Address เก็บค่า ModbusRTU ID ของบอร์ด Address = 64
+
+
+#define TFLiDAR_ERROR_NONE -1
+#define TFLiDAR_ERROR_DISCONNECT -2
 /**************************************/
 /*           GPIO define              */
 /**************************************/
