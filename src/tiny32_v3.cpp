@@ -36,6 +36,15 @@ tiny32_v3::tiny32_v3()
   digitalWrite(LED_IO12, LOW);
   digitalWrite(LED_IO4, LOW);
   digitalWrite(BUZZER, LOW);
+  
+  // Initialize Debounce objects for SW1 and SW2
+  // Using 50ms debounce delay and invert=true for active LOW switches
+  _sw1Debounce = new Debounce(SW1, 50, true);
+  _sw2Debounce = new Debounce(SW2, 50, true);
+  
+  // Initialize last state to LOW
+  _sw1LastState = false;
+  _sw2LastState = false;
 }
 
 /***********************************************************************
@@ -131,26 +140,64 @@ void tiny32_v3::buzzer_beep(int times)
 
 /***********************************************************************
  * FUNCTION:    Sw1
- * DESCRIPTION: Read SW1[pin33]
+ * DESCRIPTION: Read SW1[pin34] with edge detection (rising edge only)
  * PARAMETERS:  nothing
- * RETURNED:    0 or 1
+ * RETURNED:    true = button pressed (first time only), false = not pressed or held
  ***********************************************************************/
 bool tiny32_v3::Sw1(void)
 {
-  bool _status = !digitalRead(SW1);
-  return _status;
+  bool currentState = _sw1Debounce->read();
+  bool result = false;
+  
+  // Detect rising edge (LOW -> HIGH)
+  if (currentState && !_sw1LastState) {
+    result = true;
+  }
+  
+  _sw1LastState = currentState;
+  return result;
+}
+
+/***********************************************************************
+ * FUNCTION:    Sw1_read
+ * DESCRIPTION: Read SW1[pin34] continuous state (debounced)
+ * PARAMETERS:  nothing
+ * RETURNED:    true = button pressed, false = not pressed
+ ***********************************************************************/
+bool tiny32_v3::Sw1_read(void)
+{
+  return _sw1Debounce->read();
 }
 
 /***********************************************************************
  * FUNCTION:    Sw2
- * DESCRIPTION: Read SW2[pin14]
+ * DESCRIPTION: Read SW2[pin35] with edge detection (rising edge only)
  * PARAMETERS:  nothing
- * RETURNED:    0 or 1
+ * RETURNED:    true = button pressed (first time only), false = not pressed or held
  ***********************************************************************/
 bool tiny32_v3::Sw2(void)
 {
-  bool _status = !digitalRead(SW2);
-  return _status;
+  bool currentState = _sw2Debounce->read();
+  bool result = false;
+  
+  // Detect rising edge (LOW -> HIGH)
+  if (currentState && !_sw2LastState) {
+    result = true;
+  }
+  
+  _sw2LastState = currentState;
+  return result;
+}
+
+/***********************************************************************
+ * FUNCTION:    Sw2_read
+ * DESCRIPTION: Read SW2[pin35] continuous state (debounced)
+ * PARAMETERS:  nothing
+ * RETURNED:    true = button pressed, false = not pressed
+ ***********************************************************************/
+bool tiny32_v3::Sw2_read(void)
+{
+  return _sw2Debounce->read();
 }
 
 /***********************************************************************

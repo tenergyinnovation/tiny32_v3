@@ -3,7 +3,7 @@
  * Description  :     Class for Hardware config and function for tiny32_v3 module
  * Author       :     Tenergy Innovation Co., Ltd.
  * Date         :     23 Nov 2021
- * Revision     :     3.17.6
+ * Revision     :     3.19.0
  * Rev1.0       :     Original
  * Rev1.1       :     Add TimeStamp_minute
  *                    Add TimeStamp_24hr_minute
@@ -53,6 +53,7 @@
  *                    must to clone Debounce library to tiny32_v3/src/Debounce
  * Rev3.18.1    :     Fix bug Error compilation for Debounce library by rolling back to Rev3.17.6 [26-10-2025]
  * Rev3.18.2    :     Improve Function TFLiDAR_getData, can respose error data, disconnect sensor [26-10-2025 20:30]
+ * Rev3.19.0    :     Add Debounce library integration improvements for Sw1 and Sw2 function [29-12-2025 23:56]
  * website      :     http://www.tenergyinnovation.co.th
  * Email        :     uten.boonliam@tenergyinnovation.co.th
  * TEL          :     089-140-7205
@@ -61,11 +62,16 @@
 #ifndef TINY32_H
 #define TINY32_H
 #include "Ticker.h"
+#include "Debounce/Debounce.h"
 
 class tiny32_v3
 {
 private:
-#define version_c "3.18.2"
+#define version_c "3.19.0"
+    Debounce* _sw1Debounce;
+    Debounce* _sw2Debounce;
+    bool _sw1LastState;
+    bool _sw2LastState;
 
 public:
 
@@ -132,8 +138,10 @@ public:
     void BlueLED(bool state);
     void BuildinLED(bool state);
     void buzzer_beep(int times);
-    bool Sw1(void);
-    bool Sw2(void);
+    bool Sw1(void);      // Edge detection (กดปุ่มครั้งแรกเท่านั้น)
+    bool Sw2(void);      // Edge detection (กดปุ่มครั้งแรกเท่านั้น)
+    bool Sw1_read(void); // อ่านค่าแบบต่อเนื่อง (ตลอดเวลาที่กด)
+    bool Sw2_read(void); // อ่านค่าแบบต่อเนื่อง (ตลอดเวลาที่กด)
     bool Slid_sw(void);
     void library_version(void);
 
